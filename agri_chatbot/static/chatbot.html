@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AgriSage — Agriculture Chatbot</title>
+
+  <style>
+    :root{
+      --brand-green: #2e8b57;
+      --accent: #66c37a;
+      --bg: #f8fff8;
+      --panel: #ffffff;
+      --muted: #6b6b6b;
+    }
+
+    /* RESET FULL HEIGHT */
+    html, body {
+      width:100%;
+      height:100%;
+      margin:0;
+      padding:0;
+      overflow:hidden;
+      font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;
+      background:linear-gradient(180deg,var(--bg),#f1fff4);
+    }
+
+    /* MAIN LAYOUT */
+    body {
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
+      padding:0;
+    }
+
+    .container{
+      width:100%;
+      max-width:1200px;
+      height:100vh;
+      background:var(--panel);
+      border-radius:14px;
+      box-shadow:0 20px 40px rgba(46,139,87,0.08);
+      display:grid;
+      grid-template-columns:420px 1fr;
+      overflow:hidden;
+    }
+
+    /* LEFT PANEL */
+    .left {
+      background:linear-gradient(180deg,#f6fff6,white);
+      padding:24px;
+      border-right:1px solid #eef6ef;
+      overflow-y:auto;
+      box-sizing:border-box;
+    }
+
+    .brand {display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+    .logo {
+      width:56px; height:56px; border-radius:10px;
+      background:var(--brand-green);
+      display:flex; align-items:center; justify-content:center;
+      color:white; font-weight:700; font-size:20px;
+    }
+    h1{margin:0;font-size:20px;color:var(--brand-green);}
+    p.lead{color:var(--muted); margin-top:8px;font-size:13px;}
+    .features{margin-top:18px;}
+    .feature{display:flex; gap:10px; margin-bottom:12px; align-items:flex-start;}
+    .chip{
+      padding:6px 10px;
+      background:var(--accent);
+      color:white;
+      border-radius:8px;
+      font-weight:600;
+      font-size:12px;
+    }
+    .small{font-size:13px;color:var(--muted)}
+    .examples{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;}
+    .example {
+      padding:8px 10px;
+      background:#fbfff9;
+      border-radius:8px;
+      border:1px solid #e6f4ea;
+      color:var(--brand-green);
+      cursor:pointer;
+      font-size:13px;
+    }
+
+    /* PREDICTION BOX */
+    .predict-panel {
+      padding:12px;
+      border-radius:10px;
+      background:#fbfff9;
+      border:1px dashed #e0f3e5;
+      margin-top:18px;
+    }
+
+    label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px;}
+    select, input.small {
+      width:100%;
+      padding:8px;
+      border-radius:8px;
+      border:1px solid #e6f4ea;
+      box-sizing:border-box;
+      font-size:13px;
+    }
+
+    .row { display:flex; gap:8px; align-items:flex-end; margin-top:10px; }
+    .col { flex:1; }
+
+    .predict-actions { margin-top:12px; display:flex; gap:8px; align-items:center; }
+    .predictResultBox { color:var(--brand-green); font-weight:600; font-size:14px; margin-left:6px; }
+
+    footer.note{padding:12px;text-align:center;color:var(--muted); font-size:13px; margin-top:18px;}
+
+    /* RIGHT PANEL — CHAT */
+    .right {
+      display:flex;
+      flex-direction:column;
+      height:100%;
+      overflow:hidden;
+      background:white;
+      box-sizing:border-box;
+    }
+
+    .messages {
+      flex:1;
+      padding:22px;
+      overflow-y:auto;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      background:white;
+      box-sizing:border-box;
+    }
+
+    .msg{
+      max-width:75%;
+      padding:12px 14px;
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.04);
+      line-height:1.4;
+    }
+    .user{align-self:flex-end; background:linear-gradient(90deg,var(--brand-green),#3fb77a); color:white; border-bottom-right-radius:4px;}
+    .bot{align-self:flex-start; background:#f1fff4; color:#0b3b23;}
+
+    .composer{
+      padding:16px;
+      border-top:1px solid #eef6ef;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      background:white;
+      flex-shrink:0;
+      box-sizing:border-box;
+    }
+
+    .input{
+      flex:1;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    input[type="text"]{
+      flex:1;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid #e6f4ea;
+      font-size:15px;
+      outline:none;
+    }
+
+    button.send{
+      background:var(--brand-green);
+      color:white;
+      border:none;
+      padding:12px 16px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    @media(max-width:980px){
+      .container{grid-template-columns:1fr;}
+      .left{display:none;}
+    }
+
+  </style>
+</head>
+<body>
+  <!-- GOOGLE TRANSLATE -->
+<div id="google_translate_element" 
+     style="position:absolute; top:10px; left:10px; z-index:9999;">
+</div>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    {
+      pageLanguage: 'en',
+      includedLanguages: 'hi,gu,ta,te,kn,ml,mr,bn,pa,ur,ne,si,or,as,en',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    },
+    'google_translate_element'
+  );
+}
+</script>
+
+<script type="text/javascript" 
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- END GOOGLE TRANSLATE -->
+
+  <div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left">
+      <div class="brand">
+        <div class="logo">AG</div>
+        <div>
+          <h1>AgriSage — Farm Intelligence</h1>
+          <p class="lead">Hybrid AI + ML assistant: practical agronomy advice plus model-backed predictions.</p>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feature"><div class="chip">AI</div><div><strong>Ask anything</strong><div class="small">Crop care, pests, irrigation, market advice.</div></div></div>
+        <div class="feature"><div class="chip">ML</div><div><strong>Predict</strong><div class="small">Yield, price, pest risk, fertilizer need, rainfall prob.</div></div></div>
+      </div>
+
+      <div style="margin-top:18px;">
+        <div style="font-weight:700;color:var(--brand-green); margin-bottom:8px;">Quick examples</div>
+        <div class="examples">
+          <div class="example" onclick="sendExample('Which tomato variety is best for Gujarat?')">Tomato variety</div>
+          <div class="example" onclick="sendExample('How to control early blight on potatoes?')">Potato blight</div>
+          <div class="example" onclick="sendExample('Fertilizer recommendation for maize?')">Fertilizer dose</div>
+        </div>
+      </div>
+
+      <!-- FULL MODEL PREDICTION DEMO -->
+      <div class="predict-panel" id="predictPanel">
+        <label for="taskSelect">Task</label>
+        <select id="taskSelect" onchange="onTaskChange()">
+          <option value="yield">Yield (tons/ha)</option>
+          <option value="crop_price">Crop Price (₹/unit)</option>
+          <option value="pest_risk">Pest Risk (0-1)</option>
+          <option value="fertilizer_need">Fertilizer Need (kg N/ha)</option>
+          <option value="rainfall_risk">Rainfall Prob (0-1)</option>
+        </select>
+
+        <!-- Task-specific inputs -->
+        <div id="inputsArea" style="margin-top:10px;">
+          <!-- default (yield) inputs -->
+          <div class="row">
+            <div class="col">
+              <label>Rainfall (mm)</label>
+              <input id="rainfall" class="small" type="number" value="500" />
+            </div>
+            <div class="col">
+              <label>Fertilizer (kg/ha)</label>
+              <input id="fert" class="small" type="number" value="120" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label>Soil index (0.5–1.5)</label>
+              <input id="soil_idx" class="small" type="number" step="0.01" value="1.0" />
+            </div>
+            <div class="col">
+              <label>Month (1-12)</label>
+              <input id="month" class="small" type="number" min="1" max="12" value="" placeholder="auto" />
+            </div>
+          </div>
+
+          <!-- Pest/rainfall specific extra inputs (hidden by default) -->
+          <div id="pestExtras" style="display:none; margin-top:8px;">
+            <div class="row">
+              <div class="col">
+                <label>Humidity (%)</label>
+                <input id="humidity" class="small" type="number" value="65" />
+              </div>
+              <div class="col">
+                <label>Temperature (°C)</label>
+                <input id="temperature_c" class="small" type="number" value="28" />
+              </div>
+            </div>
+            <div style="margin-top:8px;">
+              <label>Recent pests (count)</label>
+              <input id="recent_pests" class="small" type="number" value="0" />
+            </div>
+          </div>
+
+          <div id="fertExtras" style="display:none; margin-top:8px;">
+            <label>N-deficit (kg)</label>
+            <input id="nitrogen_deficit_kg" class="small" type="number" value="30" />
+            <div style="margin-top:8px;">
+              <label>Crop stage (1-5)</label>
+              <input id="crop_stage" class="small" type="number" min="1" max="5" value="3" />
+            </div>
+          </div>
+
+          <div id="rainfallExtras" style="display:none; margin-top:8px;">
+            <label>Recent 7 days rainfall (mm)</label>
+            <input id="recent_7days_mm" class="small" type="number" value="40" />
+          </div>
+        </div>
+
+        <div class="predict-actions">
+          <button class="pill" onclick="callPredict()">Run prediction</button>
+          <div class="predictResultBox" id="predictResult">No result yet</div>
+        </div>
+      </div>
+
+      <footer class="note">Green & white theme • Prize-ready UI • Replace demo models with real ones in /models/</footer>
+    </div>
+
+    <!-- RIGHT PANEL (CHAT) -->
+    <div class="right">
+      <div class="messages" id="messages">
+        <div style="text-align:center;color:var(--muted);font-size:13px;margin-bottom:8px;">
+          Ask AgriSage anything — it will answer with agriculture knowledge and model predictions.
+        </div>
+      </div>
+
+      <div class="composer">
+        <div class="input" style="display:flex; align-items:center;">
+          <input id="userInput" type="text" placeholder='Type your question or try "How to prevent downy mildew?"' onkeydown="if(event.key==='Enter'){send();}" />
+        </div>
+        <button class="send" onclick="send()">Send</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ---------------------------
+   Helper DOM utilities
+   --------------------------- */
+function appendMessage(text, who='bot') {
+  const div = document.createElement('div');
+  div.className = 'msg ' + (who === 'user' ? 'user' : 'bot');
+  div.innerHTML = text.replace(/\n/g, '<br>');
+  const messages = document.getElementById('messages');
+  messages.appendChild(div);
+  // small timeout to ensure layout then scroll
+  setTimeout(()=> { messages.scrollTop = messages.scrollHeight; }, 10);
+}
+
+/* Escape HTML */
+function escapeHtml(unsafe) {
+  return unsafe
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+/* ---------------------------
+   Chat (AI) request
+   --------------------------- */
+async function send() {
+  const input = document.getElementById('userInput');
+  const q = input.value.trim();
+  if (!q) return;
+
+  appendMessage(`<b>You:</b> ${escapeHtml(q)}`, 'user');
+  input.value = '';
+  appendMessage('Thinking...', 'bot');
+
+  try {
+    const res = await fetch('/api/ask', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({question: q})
+    });
+    const data = await res.json();
+    const msgs = document.querySelectorAll('.msg.bot');
+    if (msgs.length) msgs[msgs.length - 1].remove();
+
+    if (data.error) appendMessage('<b>Error:</b> ' + escapeHtml(data.error), 'bot');
+    else appendMessage(`<b>AgriSage:</b> ${escapeHtml(data.answer)}`, 'bot');
+  } catch (e) {
+    appendMessage('<b>Error:</b> ' + escapeHtml(String(e)), 'bot');
+  }
+}
+
+/* Example quick inserts */
+function sendExample(text){
+  document.getElementById('userInput').value = text;
+  send();
+}
+
+/* ---------------------------
+   Prediction panel logic
+   --------------------------- */
+function onTaskChange() {
+  const t = document.getElementById('taskSelect').value;
+  // reset all extras
+  document.getElementById('pestExtras').style.display = 'none';
+  document.getElementById('fertExtras').style.display = 'none';
+  document.getElementById('rainfallExtras').style.display = 'none';
+  // show/hide inputs per task
+  if (t === 'yield') {
+    // default inputs visible
+    document.getElementById('month').placeholder = 'auto';
+  } else if (t === 'crop_price') {
+    // for price we care about month and demand
+    document.getElementById('month').placeholder = '1-12 (leave blank for current)';
+  } else if (t === 'pest_risk') {
+    document.getElementById('pestExtras').style.display = 'block';
+  } else if (t === 'fertilizer_need') {
+    document.getElementById('fertExtras').style.display = 'block';
+  } else if (t === 'rainfall_risk') {
+    document.getElementById('rainfallExtras').style.display = 'block';
+  }
+}
+
+/* Build features for each task from inputs */
+function buildFeaturesForTask(task) {
+  const rain = Number(document.getElementById('rainfall').value || 0);
+  const fert = Number(document.getElementById('fert').value || 0);
+  const soil_idx = Number(document.getElementById('soil_idx').value || 1.0);
+  const monthVal = Number(document.getElementById('month').value || 0);
+  const features = {};
+
+  if (task === 'yield') {
+    features.rainfall_mm = rain;
+    features.fertilizer_kg_per_ha = fert;
+    features.soil_index = soil_idx;
+  } else if (task === 'crop_price') {
+    features.month = monthVal > 0 ? monthVal : (new Date().getMonth()+1);
+    features.demand_index = 1.0;
+    features.avg_yield = Math.max(0.5, fert/100);
+  } else if (task === 'pest_risk') {
+    features.humidity = Number(document.getElementById('humidity').value || 60);
+    features.temperature_c = Number(document.getElementById('temperature_c').value || 28);
+    features.recent_pests = Number(document.getElementById('recent_pests').value || 0);
+  } else if (task === 'fertilizer_need') {
+    features.nitrogen_deficit_kg = Number(document.getElementById('nitrogen_deficit_kg').value || 20);
+    features.crop_stage = Number(document.getElementById('crop_stage').value || 3);
+  } else if (task === 'rainfall_risk') {
+    features.recent_7days_mm = Number(document.getElementById('recent_7days_mm').value || 40);
+  }
+  return features;
+}
+
+/* call /api/predict */
+async function callPredict() {
+  const task = document.getElementById('taskSelect').value;
+  const predictResult = document.getElementById('predictResult');
+  predictResult.textContent = 'Running...';
+
+  const features = buildFeaturesForTask(task);
+
+  try {
+    const res = await fetch('/api/predict', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task, features})
+    });
+
+    const data = await res.json();
+    if (data.error) {
+      predictResult.textContent = 'Error';
+      appendMessage(`<b>Error (predict):</b> ${escapeHtml(data.error)}`, 'bot');
+      return;
+    }
+
+    // server returns { result: {...} } in app.py
+    const r = data.result || data;
+    // human-readable:
+    let display = '';
+    if (r.prediction !== undefined) {
+      // format numeric nicely
+      display = typeof r.prediction === 'number' ? r.prediction.toFixed(3) : String(r.prediction);
+    } else if (r.error) {
+      display = 'Error: ' + r.error;
+    } else {
+      display = JSON.stringify(r);
+    }
+
+    predictResult.textContent = display;
+    // also append to chat
+    appendMessage(`<b>Prediction (${task}):</b> ${escapeHtml(display)}`, 'bot');
+
+  } catch (e) {
+    predictResult.textContent = 'Error';
+    appendMessage('<b>Error:</b> ' + escapeHtml(String(e)), 'bot');
+  }
+}
+
+/* init */
+(function init() {
+  onTaskChange(); // set correct inputs per default task
+})();
+</script>
+</body>
+</html>
