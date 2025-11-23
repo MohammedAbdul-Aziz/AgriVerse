@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriVerse - Farmer Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --primary-light: #4caf50;
+            --secondary: #ff9800;
+            --accent: #2196f3;
+            --light: #f5f5f5;
+            --dark: #333;
+            --gray: #9e9e9e;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: white;
+            padding: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-right: 0;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(46, 125, 50, 0.05);
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .nav-links i {
+            font-size: 1.1rem;
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 140px);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .bg-secondary {
+            background-color: var(--secondary);
+        }
+
+        .bg-success {
+            background-color: var(--success);
+        }
+
+        .token-balance {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .status-growing {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: var(--success);
+        }
+
+        .status-planting {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: var(--warning);
+        }
+
+        .status-harvest {
+            background-color: rgba(33, 150, 243, 0.15);
+            color: var(--accent);
+        }
+
+        .progress-container {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .weather-risk {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .risk-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .risk-low {
+            background-color: var(--success);
+        }
+
+        .risk-medium {
+            background-color: var(--warning);
+        }
+
+        .risk-high {
+            background-color: var(--danger);
+        }
+
+        /* Wallet Styles */
+        .balance-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .balance-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .balance-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .transaction-history {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .transaction-history th,
+        .transaction-history td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .transaction-history th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .transaction-history tr:last-child td {
+            border-bottom: none;
+        }
+
+        .transaction-positive {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .transaction-negative {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        /* Marketplace Styles */
+        .category-filters {
+            display: flex;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-filter {
+            padding: 0.7rem 1.5rem;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .category-filter.active,
+        .category-filter:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 150px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-size: 3rem;
+        }
+
+        .product-content {
+            padding: 1.5rem;
+        }
+
+        .product-category {
+            font-size: 0.8rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .buy-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+
+        .buy-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .buy-button:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+        }
+
+        /* Enhanced Update Styles */
+        .update-form-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .file-upload-container {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-container:hover {
+            border-color: var(--primary);
+            background-color: rgba(46, 125, 50, 0.05);
+        }
+
+        .file-upload-container.dragover {
+            border-color: var(--primary);
+            background-color: rgba(46, 125, 50, 0.1);
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-text {
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .file-upload-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        .image-preview {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .remove-image {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .submit-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .submit-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Enhanced Updates List Styles */
+        .updates-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .update-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .update-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .update-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .update-date {
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .update-day {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .update-content {
+            padding: 1rem 1.5rem;
+        }
+
+        .update-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+
+        .update-description {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .update-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .update-divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 1rem 0;
+        }
+
+        /* Investment Section Styles */
+        .investment-section {
+            background: linear-gradient(135deg, #ffecb3, #ffd54f);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .investment-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #5d4037;
+        }
+
+        .investment-amount {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .currency {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #5d4037;
+        }
+
+        .amount-input {
+            width: 200px;
+            padding: 0.75rem;
+            border: 2px solid #ffb300;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: bold;
+            color: #5d4037;
+        }
+
+        .invest-button {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .invest-button:hover {
+            background-color: #f57c00;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+        }
+
+        /* Funding Styles */
+        .funding-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .funding-card {
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            color: white;
+        }
+
+        .funding-requested {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+
+        .funding-received {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+        }
+
+        .funding-available {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+        }
+
+        .funding-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .investor-list {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .investor-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .investor-item:last-child {
+            border-bottom: none;
+        }
+
+        .investor-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .investor-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .investor-details h4 {
+            margin-bottom: 0.2rem;
+        }
+
+        .investor-details p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .investment-amount {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .request-button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .request-button:hover {
+            background-color: #f57c00;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .dashboard-grid,
+            .balance-summary,
+            .funding-status {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .investment-amount {
+                flex-direction: column;
+            }
+
+            .amount-input {
+                width: 100%;
+            }
+        }
+
+        .nav-links li {
+            margin-right: 15px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        nav {
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .purpose-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px 20px;
+            margin-top: 10px;
+        }
+
+        .purpose-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .purpose-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- 🌍 Google Translate Widget -->
+<div id="google_translate_element" style="margin: 10px 0;"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,te,ur,ar,fr,es,de,zh,ja,ko,ta,bn,pa,ml,gu,kn',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      },
+      'google_translate_element'
+    );
+  }
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-tractor"></i>
+                <span>AgriVerse</span>
+            </div>
+            <div class="user-avatar"></div>
+            <div>
+                <div></div>
+                <div style="font-size: 0.8rem; opacity: 0.8;"></div>
+            </div>
+
+
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-th-large"></i>
+                        Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-page="wallet"><i class="fas fa-wallet"></i> Token Wallet</a></li>
+                <li><a href="#" class="nav-link" data-page="marketplace"><i class="fas fa-store"></i> Marketplace</a>
+                </li>
+                <li><a href="#" class="nav-link" data-page="updates"><i class="fas fa-upload"></i> Farm Updates</a></li>
+                <li><a href="#" class="nav-link" data-page="funding"><i class="fas fa-hand-holding-usd"></i> Funding</a>
+                </li>
+                <li><a href="/agri_chatbot/static/chatbot.html" class="nav-link" id="estimator-btn">
+                        <i class="fas fa-wallet"></i> AV Bot
+                    </a>
+                <li style="margin-left: auto;">
+                    <a href="/login-page.html" class="nav-link" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
+            <div class="page-header">
+                <h2>Farmer Dashboard</h2>
+                <div class="weather-risk">
+                    <div class="risk-indicator risk-low"></div>
+                    <span>Low Weather Risk</span>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Farmer Profile</div>
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <p><strong>Name:</strong> <span id="farmer_name"></span></p>
+                    <p><strong>Location:</strong> <span id="farmer_location"></span></p>
+                    <p><strong>Crop:</strong> <span id="farmer_crop"></span></p>
+                    <p><strong>Farm Size:</strong> <span id="farmer_land"></span></p>
+
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Token Balance</div>
+                        <div class="card-icon bg-accent">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+
+                    <!-- ADD THIS -->
+                    <div class="token-balance" id="dashboard-token-balance">
+                        Loading...
+                    </div>
+
+                    <p>Available for farm inputs</p>
+                </div>
+
+
+                <!-- Season Status Card -->
+                <div class="card" style="position: relative;">
+
+                    <div class="card-header">
+                        <div class="card-title">Season Status</div>
+                        <div class="card-icon bg-secondary">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+
+                    <!-- Start Button -->
+                    <button id="startCycleBtn" style="margin-top:10px;width:100%;padding:10px;background:#4CAF50;
+        color:white;border:none;border-radius:6px;cursor:pointer;font-size:15px;">
+                        Start New Crop Season
+                    </button>
+
+                    <!-- Crop Phase -->
+                    <p style="margin-top:15px; font-size:15px;">
+                        <strong>Current Phase:</strong>
+                        <span id="season_phase" style="color:#2e7d32;">Loading...</span>
+                    </p>
+
+                    <!-- Cycle Days -->
+                    <p style="font-size:15px;">
+                        <strong>Days in Cycle:</strong>
+                        <span id="season_days" style="color:#2e7d32;">Loading...</span>
+                    </p>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-container" style="margin-top:15px;">
+                        <div class="progress-bar" style="
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;">
+
+                            <div id="season_progress" style="height: 100%; width: 0%; background:#4CAF50; border-radius: 5px;
+                transition: width 0.6s ease;">
+                            </div>
+
+                        </div>
+
+                        <div class="progress-text"
+                            style="display:flex; justify-content:space-between; margin-top:8px; font-size:14px; color:#777;">
+                            <span>Planted</span>
+                            <span>Harvest</span>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Next Harvest</div>
+                        <div class="card-icon bg-success">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Crop Recommendation</div>
+                        <div class="card-icon bg-success"> -->
+                <!-- </div>
+                </div> -->
+
+                <div class="card" id="crop-recommendation-card" style="position: relative;">
+                    <div style="font-weight:600; margin-bottom:8px;">Crop Recommendation</div>
+
+                    <!-- Recommendation result -->
+                    <div id="crop-recommendation-result" style="font-size:1.1rem; color:#555;">
+                        Loading…
+                    </div>
+
+                    <!-- Edit icon -->
+                    <button id="edit-recommend-btn"
+                        style="position:absolute; top:12px; right:12px; border:none; background:none; cursor:pointer;">
+                        ✏️
+                    </button>
+                </div>
+
+
+            </div>
+
+
+
+
+            <!-- Put this inside the Next Harvest card content -->
+            <div id="farm-photo-grid" style="display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            gap: 12px; 
+            margin-top: 12px;">
+            </div>
+
+            <div id="farm-photo-empty" class="empty-state" style="padding:1rem; display:none;">
+                <i class="fas fa-image"></i>
+                <div>No farm photos available</div>
+            </div>
+
+
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Recent Activity</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Wallet Page -->
+        <section id="wallet" class="page">
+            <div class="page-header">
+                <h2>Token Wallet</h2>
+            </div>
+
+            <div class="balance-summary">
+                <div class="balance-card">
+                    <h3>Total Received</h3>
+                    <p>Tokens from investors</p>
+                </div>
+
+                <div class="balance-card" style="background: linear-gradient(135deg, var(--accent), #1976d2);">
+                    <h3>Current Balance</h3>
+                    <p>Available tokens</p>
+                </div>
+
+                <div class="balance-card" style="background: linear-gradient(135deg, var(--secondary), #f57c00);">
+                    <h3>Total Spent</h3>
+
+                    <p>On farm inputs</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Transaction History</div>
+                </div>
+                <table class="transaction-history">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Marketplace Page -->
+        <section id="marketplace" class="page">
+            <div class="page-header">
+                <h2>Marketplace</h2>
+                <div>Use your tokens to purchase farming inputs</div>
+            </div>
+
+            <div class="category-filters">
+                <button class="category-filter active" data-category="all">
+                    <i class="fas fa-th"></i> All Items
+                </button>
+                <button class="category-filter" data-category="seeds">
+                    <i class="fas fa-seedling"></i> Seeds
+                </button>
+                <button class="category-filter" data-category="fertilizers">
+                    <i class="fas fa-flask"></i> Fertilizers
+                </button>
+                <button class="category-filter" data-category="machinery">
+                    <i class="fas fa-tractor"></i> Machinery
+                </button>
+                <button class="category-filter" data-category="irrigation">
+                    <i class="fas fa-tint"></i> Irrigation
+                </button>
+                <button class="category-filter" data-category="veterinary">
+                    <i class="fas fa-paw"></i> Veterinary/Feed
+                </button>
+            </div>
+
+            <div class="products-grid">
+
+
+
+
+            </div>
+        </section>
+
+        <!-- Enhanced Updates Page -->
+        <section id="updates" class="page">
+            <div class="page-header">
+                <h2>Farm Updates</h2>
+                <div>Share daily progress with your investors</div>
+            </div>
+
+            <!-- Update Form -->
+            <div class="update-form-container">
+                <h3 style="margin-bottom: 1.5rem; color: var(--primary-dark);">Create New Update</h3>
+
+                <div class="form-group">
+                    <label for="update-date">Date</label>
+                    <input type="date" id="update-date">
+                </div>
+
+                <div class="form-group">
+                    <label for="update-day">Day in Crop Cycle</label>
+                    <input type="number" id="update-day" placeholder="e.g., 42">
+                </div>
+
+                <div class="form-group">
+                    <label for="update-title">Update Title</label>
+                    <input type="text" id="update-title" placeholder="e.g., First Sprouting Appeared">
+                </div>
+
+                <div class="form-group">
+                    <label for="update-description">Description</label>
+                    <textarea id="update-description" placeholder="Describe your farm progress..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Photo</label>
+                    <div class="file-upload-container" id="file-upload-container">
+                        <div class="file-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="file-upload-text">
+                            <p>Drag & drop your image here or click to browse</p>
+                            <p style="font-size: 0.9rem; color: var(--gray);">Supports JPG, PNG (Max 5MB)</p>
+                        </div>
+                        <button class="file-upload-btn">
+                            <i class="fas fa-folder-open"></i> Choose Image
+                        </button>
+
+                        <input type="file" id="update-photo" class="file-upload-input" accept="image/*">
+
+                        <!-- <button class="file-upload-btn"> -->
+                        <!-- <i class="fas fa-folder-open"></i> Choose Image
+                        </button>
+                        <input type="file" id="update-photo" class="file-upload-input" accept="image/*"> -->
+                    </div>
+                    <div class="image-preview" id="image-preview">
+                        <img src="" alt="Preview" class="preview-image" id="preview-image">
+                        <button class="remove-image" id="remove-image">
+                            <i class="fas fa-times"></i> Remove Image
+                        </button>
+                    </div>
+                </div>
+
+                <button class="submit-button" id="submit-update">
+                    <i class="fas fa-paper-plane"></i> Publish Update
+                </button>
+            </div>
+
+            <!-- Updates List -->
+            <div class="updates-list" id="updates-list">
+                <!-- Updates will be dynamically added here -->
+            </div>
+
+            <!-- Investment Section -->
+            <div class="investment-section">
+
+                <div class="investment-amount">
+
+                </div>
+                <button class="invest-button">
+                    <i class="fas fa-chart-line"></i> Simulate Investment
+                </button>
+            </div>
+        </section>
+
+        <!-- Funding Page -->
+        <section id="funding" class="page">
+            <div class="page-header">
+                <h2>Funding Requests</h2>
+                <button class="request-button" id="create-request-btn">
+                    <i class="fas fa-plus"></i> Create Request
+                </button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="funding-status">
+                <div class="funding-card funding-requested">
+                    <h3>Total Requested</h3>
+                    <div class="funding-amount" id="total-requested">0</div>
+                    <p>Tokens requested so far</p>
+                </div>
+
+                <div class="funding-card funding-received">
+                    <h3>Available Balance</h3>
+                    <div class="funding-amount" id="available-funds">0</div>
+                    <p>Funds remaining</p>
+                </div>
+
+                <div class="funding-card funding-available">
+                    <h3>Additional Needed</h3>
+                    <div class="funding-amount" id="additional-needed">0</div>
+                    <p>Required for next season</p>
+                </div>
+            </div>
+
+            <!-- Requests List -->
+            <div class="investor-list">
+                <h3 style="margin-bottom: 1rem;">Your Funding Requests</h3>
+                <div id="funding-list"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modals -->
+    <div class="modal" id="purchase-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Confirm Purchase</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="purchase-details">
+                <!-- Purchase details will be inserted here -->
+            </div>
+            <div style="margin-top: 1.5rem; display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="submit-button" id="confirm-purchase">Confirm</button>
+                <button class="request-button" style="background-color: #9e9e9e;" id="cancel-purchase">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="request-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Request Funding</div>
+                <button class="close-modal">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label for="request-amount">Amount (Tokens)</label>
+                <input type="number" id="request-amount">
+            </div>
+
+            <!-- MULTIPLE PURPOSES -->
+            <div class="form-group">
+                <label>Select Purpose (Max 3)</label>
+
+                <div class="purpose-box">
+
+                    <label class="purpose-item">
+                        <input type="checkbox" class="purpose" value="seeds">
+                        Seeds
+                    </label>
+
+                    <label class="purpose-item">
+                        <input type="checkbox" class="purpose" value="fertilizer">
+                        Fertilizer
+                    </label>
+
+                    <label class="purpose-item">
+                        <input type="checkbox" class="purpose" value="machinery">
+                        Machinery
+                    </label>
+
+                    <label class="purpose-item">
+                        <input type="checkbox" class="purpose" value="irrigation">
+                        Irrigation
+                    </label>
+
+                    <label class="purpose-item">
+                        <input type="checkbox" class="purpose" value="labor">
+                        Labor
+                    </label>
+
+                    <label class="purpose-item">
+                        <input type="checkbox" class="purpose" value="veterinary">
+                        Veterinary
+                    </label>
+
+                    <label class="purpose-item">
+                        <input type="checkbox" class="purpose purpose-other" value="other">
+                        Other
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- Hidden custom purpose box -->
+            <div class="form-group" id="other-purpose-box" style="display:none;">
+                <label>Enter Custom Purpose</label>
+                <input type="text" id="custom-purpose" placeholder="Explain your purpose...">
+            </div>
+
+            <div class="form-group">
+                <label for="request-description">Description</label>
+                <textarea id="request-description"></textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="submit-button" id="submit-request">Submit</button>
+                <button class="request-button" style="background:#999;" id="cancel-request">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Operation completed successfully!</span>
+    </div>
+    <!-- <script>
+        // PURPOSE LIMIT SYSTEM
+        const purposeBoxes = document.querySelectorAll(".purpose");
+        const otherPurposeCheck = document.querySelector(".purpose-other");
+        const otherPurposeBox = document.getElementById("other-purpose-box");
+        const customPurposeInput = document.getElementById("custom-purpose");
+
+        purposeBoxes.forEach(box => {
+            box.addEventListener("change", () => {
+                const checked = [...purposeBoxes].filter(p => p.checked);
+
+                // Limit to 3
+                if (checked.length > 3) {
+                    box.checked = false;
+                    showToast("You can select a maximum of 3 purposes.", true);
+                    return;
+                }
+
+                // Show/hide custom textbox
+                if (otherPurposeCheck.checked) {
+                    otherPurposeBox.style.display = "block";
+                } else {
+                    otherPurposeBox.style.display = "none";
+                    customPurposeInput.value = "";
+                }
+            });
+        });
+
+    </script> -->
+    <script>
+
+        (function () {
+            // --------- DOM refs from your existing farmer.html ----------
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+
+            // Profile bits in header + card
+            const headerNameEl = document.querySelector('.user-info > div:first-child') || null; // "R"
+            const headerNameBlock = document.querySelector('.user-info > div:last-child > div:first-child'); // name text
+            const headerLocBlock = document.querySelector('.user-info > div:last-child > div:last-child');   // state text
+
+            // Profile card fields (in Dashboard page – adjust selectors if needed)
+            const profileCard = document.querySelector('#dashboard .card'); // first card in your grid
+            // Transaction table
+            const transactionTbody = document.querySelector('.transaction-history tbody');
+            // Balance elements
+            const balanceCards = document.querySelectorAll('.balance-amount');
+            const tokenBalanceTextEls = document.querySelectorAll('.token-balance');
+
+            // Marketplace
+            const categoryFilters = document.querySelectorAll('.category-filter');
+            const productsGrid = document.querySelector('.products-grid');
+
+            // Purchase modal
+            const purchaseModal = document.getElementById('purchase-modal');
+            const purchaseDetails = document.getElementById('purchase-details');
+            const confirmPurchaseBtn = document.getElementById('confirm-purchase');
+            const cancelPurchaseBtn = document.getElementById('cancel-purchase');
+
+            // Funding
+
+            // Add a container to list funding requests (if not present)
+
+
+            // Updates
+            const updatesList = document.getElementById('updates-list');
+            const submitUpdateBtn = document.getElementById('submit-update');
+            const updateDate = document.getElementById('update-date');
+            const updateDay = document.getElementById('update-day');
+            const updateTitle = document.getElementById('update-title');
+            const updateDescription = document.getElementById('update-description');
+            const fileUploadInput = document.getElementById('update-photo');
+
+            // Toast
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+
+            // State
+            const state = {
+                tokenBalance: 0, // start at 0 until fetched
+                transactions: [],
+                marketplace: [],
+                currentPurchase: null,
+            };
+
+            // ------------------- Helpers -------------------
+            function showToast(message, isError = false) {
+                toastMsg.textContent = message;
+                toast.classList.toggle('error', !!isError);
+                toast.classList.add('active');
+                setTimeout(() => toast.classList.remove('active'), 3000);
+            }
+
+            function money(n) {
+                return Number(n || 0).toLocaleString();
+            }
+
+            async function api(url, { method = 'GET', body = null } = {}) {
+                const opts = { method };
+                if (body instanceof FormData) {
+                    opts.body = body;
+                } else if (body) {
+                    opts.headers = { 'Content-Type': 'application/json' };
+                    opts.body = JSON.stringify(body);
+                }
+                const res = await fetch(url, opts);
+                const text = await res.text();
+                try {
+                    return JSON.parse(text);
+                } catch {
+                    // If backend sends plain error string
+                    return { status: 'ERR', message: text || 'Unexpected server response' };
+                }
+            }
+
+            function setActivePage(pageId) {
+                pages.forEach(p => p.classList.toggle('active', p.id === pageId));
+                navLinks.forEach(a => a.classList.toggle('active', a.dataset.page === pageId));
+            }
+
+            // ------------------- Loaders -------------------
+            async function loadProfile() {
+
+                const out = await api("../backend/farmer/profile.php");
+                if (out.status !== "OK") {
+                    console.error("Profile error:", out.message);
+                    return;
+                }
+
+                const d = out.data; // NOW d exists
+
+                // Fill dashboard card
+                document.getElementById("farmer_name").textContent = d.name || "-";
+                document.getElementById("farmer_location").textContent = d.state || "-";
+                document.getElementById("farmer_crop").textContent = d.farming_type || "-";
+                document.getElementById("farmer_land").textContent =
+                    d.land_area_acres ? d.land_area_acres + " Acres" : "-";
+            }
+
+
+            async function loadTransactions() {
+                const out = await api('../backend/wallet/transactions.php');
+                state.transactions = (out.status === 'OK' && Array.isArray(out.data)) ? out.data : [];
+                renderTransactions();
+            }
+
+            async function loadMarketplace() {
+                const out = await api('../backend/marketplace/list_items.php');
+                state.marketplace = (out.status === 'OK' && Array.isArray(out.data)) ? out.data : [];
+                renderMarketplace('all');
+            }
+
+            async function loadUpdates() {
+                const out = await api('../backend/farm_updates/list.php');
+                const list = (out.status === 'OK' && Array.isArray(out.data)) ? out.data : [];
+                renderUpdates(list);
+            }
+
+
+            // ------------------- Renderers -------------------
+            function updateBalanceUI() {
+                // Big balance cards (3 cards in Wallet)
+                balanceCards.forEach((el, i) => {
+                    // Only "Current Balance" card shows current balance.
+                    // In your HTML the middle card is current balance. We’ll leave others as-is.
+                    if (el.parentElement?.querySelector('h3')?.textContent?.toLowerCase().includes('current')) {
+                        el.textContent = money(state.tokenBalance);
+                    }
+                });
+                // Token balance on dashboard
+                tokenBalanceTextEls.forEach(el => {
+                    el.textContent = `${money(state.tokenBalance)} Tokens`;
+                });
+            }
+
+            function renderTransactions() {
+                if (!transactionTbody) return;
+                transactionTbody.innerHTML = '';
+                state.transactions.forEach(t => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+        <td>${t.date || ''}</td>
+        <td>${t.description || ''}</td>
+        <td class="${(t.amount || 0) > 0 ? 'transaction-positive' : 'transaction-negative'}">
+          ${(t.amount || 0) > 0 ? '+' : ''} ${t.amount} Tokens
+        </td>
+        <td>${money(t.balance)}</td>
+      `;
+                    transactionTbody.appendChild(tr);
+                });
+            }
+
+            function productCardHTML(item) {
+                const iconByCategory = {
+                    seeds: '<i class="fas fa-seedling" style="color:#4caf50;"></i>',
+                    fertilizers: '<i class="fas fa-flask" style="color:#8d6e63;"></i>',
+                    machinery: '<i class="fas fa-tractor" style="color:#f44336;"></i>',
+                    irrigation: '<i class="fas fa-tint" style="color:#2196f3;"></i>',
+                    veterinary: '<i class="fas fa-paw" style="color:#795548;"></i>',
+                };
+                const icon = iconByCategory[item.category] || '<i class="fas fa-box-open"></i>';
+                return `
+      <div class="product-card" data-category="${item.category}" data-id="${item.id}">
+        <div class="product-image">
+          ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%;height:150px;object-fit:cover;">` : icon}
+        </div>
+        <div class="product-content">
+          <div class="product-category">${(item.category || '').toUpperCase()}</div>
+          <div class="product-name">${item.name || ''}</div>
+          <div class="product-description">${item.description || ''}</div>
+          <div class="product-footer">
+            <div class="product-price">${money(item.price)} Tokens</div>
+            <button class="buy-button" data-item="${item.name}" data-id="${item.id}" data-price="${item.price}">
+              <i class="fas fa-shopping-cart"></i> Buy
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+            }
+
+            function renderMarketplace(activeCategory = 'all') {
+                if (!productsGrid) return;
+                if (!state.marketplace.length) {
+                    productsGrid.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <i class="fas fa-store"></i>
+          <h3>No items yet</h3>
+          <p>Suppliers will add products soon.</p>
+        </div>
+      `;
+                    return;
+                }
+                const filtered = state.marketplace.filter(p => activeCategory === 'all' || p.category === activeCategory);
+                productsGrid.innerHTML = filtered.map(productCardHTML).join('');
+                // Bind buy buttons
+                productsGrid.querySelectorAll('.buy-button').forEach(btn => {
+                    btn.addEventListener('click', onBuyClick);
+                });
+            }
+
+            function renderUpdates(list) {
+                updatesList.innerHTML = '';
+                if (!list.length) {
+                    updatesList.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-images"></i>
+          <h3>No updates yet</h3>
+          <p>Share your first farm update to keep investors informed.</p>
+        </div>
+      `;
+                    return;
+                }
+                list.forEach(u => {
+                    const div = document.createElement('div');
+                    div.className = 'update-card';
+                    div.innerHTML = `
+        <div class="update-header">
+          <div class="update-date"><i class="far fa-calendar"></i> ${formatDate(u.date)}</div>
+          <div class="update-day">Day ${u.day}</div>
+        </div>
+        <div class="update-content">
+          <div class="update-title">${u.title}</div>
+          <div class="update-description">${u.description}</div>
+          ${u.image_url ? `<img src="${u.image_url}" class="update-image" alt="Farm update">` : ''}
+        </div>
+      `;
+                    updatesList.appendChild(div);
+                });
+            }
+
+
+
+            // ------------------- Handlers -------------------
+            function formatDate(s) {
+                try {
+                    return new Date(s).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+                } catch { return s; }
+            }
+
+            function onBuyClick(e) {
+                const btn = e.currentTarget;
+                const id = btn.dataset.id;
+                const name = btn.dataset.item;
+                const price = Number(btn.dataset.price || 0);
+
+                state.currentPurchase = { id, name, price };
+
+                // Fill modal
+                purchaseDetails.innerHTML = `
+      <p>You are about to purchase:</p>
+      <p style="font-weight:bold;margin:10px 0;">${name}</p>
+      <p>Price: <span style="color:var(--primary);font-weight:bold;">${money(price)} Tokens</span></p>
+      <p>Your current balance: <span style="font-weight:bold;">${money(state.tokenBalance)} Tokens</span></p>
+      <p>Balance after purchase: <span style="font-weight:bold;">${money(state.tokenBalance - price)} Tokens</span></p>
+    `;
+                confirmPurchaseBtn.disabled = state.tokenBalance < price;
+                confirmPurchaseBtn.style.backgroundColor = state.tokenBalance < price ? '#9e9e9e' : '';
+                purchaseModal.classList.add('active');
+            }
+
+            async function confirmPurchase() {
+                if (!state.currentPurchase) return;
+                const fd = new FormData();
+                fd.append('item_id', state.currentPurchase.id);
+
+                const out = await api('../backend/wallet/purchase.php', { method: 'POST', body: fd });
+                if (out.status !== 'OK') {
+                    showToast(out.message || 'Purchase failed', true);
+                    return;
+                }
+
+                // Update balance + transactions
+                state.tokenBalance = Number(out.data.new_balance || 0);
+                if (out.data.transaction) {
+                    state.transactions.unshift(out.data.transaction);
+                }
+                updateBalanceUI();
+                renderTransactions();
+
+                purchaseModal.classList.remove('active');
+                showToast(`Purchased ${state.currentPurchase.name} successfully!`);
+                state.currentPurchase = null;
+            }
+
+            async function submitUpdate() {
+                if (!updateDate.value || !updateDay.value || !updateTitle.value || !updateDescription.value) {
+                    showToast("Please fill in all fields.", true);
+                    return;
+                }
+
+                // IMPORTANT — must be at top
+                const fd = new FormData();
+
+                fd.append("update-date", updateDate.value);
+                fd.append("update-day", updateDay.value);
+                fd.append("update-title", updateTitle.value);
+                fd.append("update-description", updateDescription.value);
+
+                if (fileUploadInput.files[0]) {
+                    fd.append("photo", fileUploadInput.files[0]);
+                }
+
+                const out = await api("../backend/farm_update_create.php", {
+                    method: "POST",
+                    body: fd
+                });
+
+                if (out.status !== "OK") {
+                    showToast(out.message || "Failed to publish update", true);
+                    return;
+                }
+
+                showToast("Farm update published successfully!");
+
+                updateTitle.value = "";
+                updateDescription.value = "";
+                updateDay.value = "";
+                updateDate.value = "";
+                fileUploadInput.value = "";
+
+                loadUpdates();
+            }
+
+
+
+            // ------------------- Events -------------------
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    setActivePage(link.dataset.page);
+                });
+            });
+
+            // Category filters
+            categoryFilters.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryFilters.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const cat = btn.dataset.category;
+                    renderMarketplace(cat);
+                });
+            });
+
+            // Modals
+            confirmPurchaseBtn.addEventListener('click', confirmPurchase);
+            cancelPurchaseBtn.addEventListener('click', () => purchaseModal.classList.remove('active'));
+            document.querySelectorAll('.close-modal').forEach(x => {
+                x.addEventListener('click', () => {
+                    purchaseModal.classList.remove('active');
+                    requestModal.classList.remove('active');
+                });
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target === purchaseModal) purchaseModal.classList.remove('active');
+                if (e.target === requestModal) requestModal.classList.remove('active');
+            });
+
+            // Funding modal buttons
+
+
+            // Updates
+            document.addEventListener("DOMContentLoaded", () => {
+                const submitBtn = document.getElementById("submit-update");
+                if (!submitBtn) {
+                    console.error("Submit button not found!");
+                    return;
+                }
+                submitBtn.addEventListener("click", submitUpdate);
+            });
+
+
+            // ------------------- Init -------------------
+            async function init() {
+                // Start everything
+                await Promise.all([
+                    loadProfile(),
+                    loadTransactions(),
+                    loadMarketplace(),
+                    loadUpdates(),
+                ]);
+            }
+
+            document.addEventListener('DOMContentLoaded', init);
+        })();
+
+    </script>
+    <script>
+        // Auto logout timer (10 minutes)
+        let inactivityTimer;
+
+        function resetLogoutTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                window.location.href = "../backend/logout.php?reason=timeout";
+            }, 600000); // 10 minutes
+        }
+
+        // Reset timer on all interactions
+        ["click", "mousemove", "keydown", "scroll", "touchstart"].forEach(evt => {
+            document.addEventListener(evt, resetLogoutTimer);
+        });
+
+        // Start timer
+        resetLogoutTimer();
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("../backend/wallet/get_balance.php")
+                .then(res => res.text())
+                .then(raw => {
+                    let out;
+                    try {
+                        out = JSON.parse(raw);
+                    } catch (e) {
+                        console.error("Invalid JSON from get_balance.php:", raw);
+                        return;
+                    }
+
+                    if (out.status !== "OK") {
+                        console.error("Balance fetch error:", out.message);
+                        return;
+                    }
+
+                    const balance = Number(out.data.balance || 0);
+
+                    // Update UI elements manually
+
+                    // 1. Update wallet page "Current Balance"
+                    document.querySelectorAll(".balance-amount").forEach(card => {
+                        const title = card.parentElement.querySelector("h3");
+                        if (title && title.textContent.toLowerCase().includes("current")) {
+                            card.textContent = balance.toLocaleString();
+                        }
+                    });
+
+                    // 2. Update dashboard “Token Balance”
+                    document.querySelectorAll(".token-balance").forEach(el => {
+                        el.textContent = `${balance.toLocaleString()} Tokens`;
+                    });
+                })
+                .catch(err => console.error("Network error while fetching balance:", err));
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            fetch("../backend/wallet/wallet_summary.php")
+                .then(res => res.json())
+                .then(out => {
+
+                    if (out.status !== "OK") {
+                        console.error("Wallet summary error:", out);
+                        return;
+                    }
+
+                    // Wallet card #1 = Total Received
+                    document.querySelectorAll(".balance-card")[0].innerHTML += `
+                <div class="balance-amount">${out.total_received.toLocaleString()}</div>
+            `;
+
+                    // Wallet card #2 = Current Balance (already handled but update again)
+                    document.querySelectorAll(".balance-card")[1].innerHTML += `
+                <div class="balance-amount">${out.balance.toLocaleString()}</div>
+            `;
+
+                    // Wallet card #3 = Total Spent
+                    document.querySelectorAll(".balance-card")[2].innerHTML += `
+                <div class="balance-amount">${out.total_spent.toLocaleString()}</div>
+            `;
+
+                })
+                .catch(err => console.error("Network error:", err));
+
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const chooseBtn = document.querySelector(".file-upload-btn");
+            const fileInput = document.getElementById("update-photo");
+
+            chooseBtn.addEventListener("click", (e) => {
+                e.preventDefault();        // stops form submission
+                fileInput.click();         // opens file picker
+            });
+
+            // show preview after selecting image
+            fileInput.addEventListener("change", () => {
+
+                const previewBox = document.getElementById("image-preview");
+                const previewImg = document.getElementById("preview-image");
+
+                if (fileInput.files && fileInput.files[0]) {
+                    previewBox.style.display = "block";
+                    previewImg.src = URL.createObjectURL(fileInput.files[0]);
+                }
+            });
+
+        });
+
+
+
+
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     const chooseBtn = document.querySelector(".file-upload-btn");
+        //     const fileInput = document.getElementById("update-photo");
+
+        //     if (chooseBtn && fileInput) {
+        //         chooseBtn.addEventListener("click", (e) => {
+        //             e.preventDefault();
+        //             fileInput.click();
+        //         });
+        //     }
+        // });
+        document.getElementById("estimator-btn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            window.location.href = "http://10.241.168.125:5000";
+        });
+
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const resultBox = document.getElementById("crop-recommendation-result");
+            if (!resultBox) return;
+
+            // Default values from dataset averages (can replace with actual farmer data)
+            const payload = {
+                N: 50.5518,
+                P: 53.3627,
+                K: 48.1491,
+                temperature: 25.6162,
+                humidity: 71.4818,
+                ph: 6.46948,
+                rainfall: 103.4637
+            };
+
+            // Call your Flask ML server
+            fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+                .then(r => r.json())
+                .then(out => {
+
+                    if (!out.success) {
+                        resultBox.innerHTML = `<span style='color:red'>${out.error || "Prediction failed"}</span>`;
+                        return;
+                    }
+
+                    // Success → show crop
+                    resultBox.innerHTML = `
+            <span style="font-size:1.4rem;">🌾 ${out.prediction}</span>
+        `;
+                })
+                .catch(err => {
+                    console.error("Crop recommendation error:", err);
+                    resultBox.innerHTML = `<span style='color:gray'>Model server is offline</span>`;
+                });
+        });
+    </script>
+
+
+    <!-- Crop Recommender Modal -->
+    <div id="crop-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+            align-items:center; justify-content:center; z-index:10000;">
+
+        <div
+            style="background:white; padding:20px; border-radius:12px; width:420px; box-shadow:0 8px 30px rgba(0,0,0,0.15);">
+
+            <h3 style="margin-top:0;">Update Soil & Weather Data</h3>
+            <p style="font-size:13px; color:#777;">Enter measurement values to get crop recommendation.</p>
+
+            <div class="row" style="display:flex; gap:12px; flex-wrap:wrap;">
+                <div style="flex:1 1 140px;">
+                    <label>N</label><input id="inp-N" type="number" step="any" style="width:100%;">
+                </div>
+                <div style="flex:1 1 140px;">
+                    <label>P</label><input id="inp-P" type="number" step="any" style="width:100%;">
+                </div>
+                <div style="flex:1 1 140px;">
+                    <label>K</label><input id="inp-K" type="number" step="any" style="width:100%;">
+                </div>
+                <div style="flex:1 1 140px;">
+                    <label>Temperature (°C)</label><input id="inp-temperature" type="number" step="any"
+                        style="width:100%;">
+                </div>
+                <div style="flex:1 1 140px;">
+                    <label>Humidity (%)</label><input id="inp-humidity" type="number" step="any" style="width:100%;">
+                </div>
+                <div style="flex:1 1 140px;">
+                    <label>pH</label><input id="inp-ph" type="number" step="any" style="width:100%;">
+                </div>
+                <div style="flex:1 1 140px;">
+                    <label>Rainfall (mm)</label><input id="inp-rainfall" type="number" step="any" style="width:100%;">
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button id="modal-save"
+                    style="flex:1; padding:10px; border:none; background:#4DA1A9; color:white; border-radius:8px;">Save</button>
+                <button id="modal-close"
+                    style="flex:1; padding:10px; border:none; background:#ddd; color:#333; border-radius:8px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const modal = document.getElementById("crop-modal");
+            const editBtn = document.getElementById("edit-recommend-btn");
+            const saveBtn = document.getElementById("modal-save");
+            const closeBtn = document.getElementById("modal-close");
+            const resultBox = document.getElementById("crop-recommendation-result");
+
+            // OPEN modal
+            editBtn.addEventListener("click", () => {
+                modal.style.display = "flex";
+            });
+
+            // CLOSE modal
+            closeBtn.addEventListener("click", () => {
+                modal.style.display = "none";
+            });
+
+            // SAVE → call ML → update crop
+            saveBtn.addEventListener("click", () => {
+
+                const payload = {
+                    N: Number(document.getElementById("inp-N").value),
+                    P: Number(document.getElementById("inp-P").value),
+                    K: Number(document.getElementById("inp-K").value),
+                    temperature: Number(document.getElementById("inp-temperature").value),
+                    humidity: Number(document.getElementById("inp-humidity").value),
+                    ph: Number(document.getElementById("inp-ph").value),
+                    rainfall: Number(document.getElementById("inp-rainfall").value),
+                };
+
+                fetch("http://127.0.0.1:5000/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                })
+                    .then(r => r.json())
+                    .then(out => {
+                        if (out.success) {
+                            resultBox.innerHTML = `<span style="font-size:1.4rem;">🌾 ${out.prediction}</span>`;
+                        } else {
+                            resultBox.innerHTML = `<span style="color:red;">Error: ${out.error}</span>`;
+                        }
+                        modal.style.display = "none"; // close modal
+                    })
+                    .catch(err => {
+                        resultBox.innerHTML = `<span style="color:gray;">Server Offline</span>`;
+                        modal.style.display = "none";
+                    });
+            });
+
+        });
+    </script>
+
+<script src="farmer.js"></script>
+    <script src="funding.js"></script>
+</body>
+
+</html>

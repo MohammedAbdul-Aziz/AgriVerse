@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriVerse - Investor Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1565c0;
+            --primary-dark: #0d47a1;
+            --primary-light: #42a5f5;
+            --secondary: #ff9800;
+            --accent: #4caf50;
+            --light: #f5f5f5;
+            --dark: #333;
+            --gray: #9e9e9e;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: white;
+            padding: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-right: 0;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(21, 101, 192, 0.05);
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .nav-links i {
+            font-size: 1.1rem;
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 140px);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .bg-primary { background-color: var(--primary); }
+        .bg-accent { background-color: var(--accent); }
+        .bg-secondary { background-color: var(--secondary); }
+        .bg-success { background-color: var(--success); }
+
+        .investment-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .return-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--success);
+            margin: 0.5rem 0;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .status-low {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: var(--success);
+        }
+
+        .status-medium {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: var(--warning);
+        }
+
+        .status-high {
+            background-color: rgba(244, 67, 54, 0.15);
+            color: var(--danger);
+        }
+
+        .progress-container {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Explore Farms Styles */
+        .filters-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-item label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .filter-item select, .filter-item input {
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .apply-filters {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .apply-filters:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .reset-filters {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            border: 1px solid #e0e0e0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .reset-filters:hover {
+            background-color: #eeeeee;
+        }
+
+        .farms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .farm-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .farm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .farm-image {
+            width: 100%;
+            height: 180px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-size: 3rem;
+        }
+
+        .farm-content {
+            padding: 1.5rem;
+        }
+
+        .farm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .farm-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .farm-location {
+            color: var(--gray);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .farm-risk {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .risk-low {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: var(--success);
+        }
+
+        .risk-medium {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: var(--warning);
+        }
+
+        .risk-high {
+            background-color: rgba(244, 67, 54, 0.15);
+            color: var(--danger);
+        }
+
+        .farm-details {
+            margin-bottom: 1rem;
+        }
+
+        .farm-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .farm-detail span:first-child {
+            color: var(--gray);
+        }
+
+        .farm-detail span:last-child {
+            font-weight: 600;
+        }
+
+        .invest-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .invest-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Investment Summary Styles */
+        .summary-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .summary-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .investment-breakdown {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-total {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .token-conversion {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .conversion-rate {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        .conversion-form {
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .confirm-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            width: 100%;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .confirm-button:hover {
+            background-color: #388e3c;
+        }
+
+        /* Live Tracking Styles */
+        .tracking-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .tracking-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .farm-updates {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .update-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .update-item:last-child {
+            border-bottom: none;
+        }
+
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .update-date {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .update-day {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .update-content {
+            margin-bottom: 0.5rem;
+        }
+
+        .update-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .farm-stats {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .weather-alert {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Returns Styles */
+        .returns-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .return-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .return-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .return-farm {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .return-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: var(--warning);
+        }
+
+        .return-details {
+            margin-bottom: 1rem;
+        }
+
+        .return-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .return-total {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--success);
+            border-top: 1px solid #f0f0f0;
+            padding-top: 0.5rem;
+        }
+
+        .report-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .report-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .dashboard-grid, .returns-container {
+                grid-template-columns: 1fr;
+            }
+
+            .farms-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .filter-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>AgriVerse Investor</span>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div>
+                    <div>Anil Kumar</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">Investor</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-page="explore"><i class="fas fa-search"></i> Explore Farms</a></li>
+                <li><a href="#" class="nav-link" data-page="invest"><i class="fas fa-hand-holding-usd"></i> Invest</a></li>
+                <li><a href="#" class="nav-link" data-page="tracking"><i class="fas fa-binoculars"></i> Live Tracking</a></li>
+                <li><a href="#" class="nav-link" data-page="returns"><i class="fas fa-money-bill-wave"></i> Returns</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
+            <div class="page-header">
+                <h2>Investment Portfolio</h2>
+                <div>Overall health of your investments</div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Total Capital Invested</div>
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="investment-amount"></div>
+                    <p>Across active farms</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Expected Returns</div>
+                        <div class="card-icon bg-accent">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="return-amount"></div>
+                    <p>Expected profit</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Risk Profile</div>
+                        <div class="card-icon bg-secondary">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
+                    <p><strong>Overall Risk:</strong></p>
+                    <span class="status-indicator status-medium">
+                        <i class="fas fa-exclamation-triangle"></i> Risk Level
+                    </span>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Low Risk</span>
+                            <span>High Risk</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Active Farms</div>
+                        <div class="card-icon bg-success">
+                            <i class="fas fa-tractor"></i>
+                        </div>
+                    </div>
+                    <p><strong>Count:</strong></p>
+                    <p><strong>Next Harvest:</strong></p>
+                    <p><strong>Avg. Duration:</strong></p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Pending Harvest Timeline</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div id="harvest-timeline">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Explore Farms Page -->
+        <section id="explore" class="page">
+            <div class="page-header">
+                <h2>Explore Farms</h2>
+                <div>Find the perfect farm to invest in</div>
+            </div>
+            
+            <div class="filters-container">
+                <h3 style="margin-bottom: 1rem;">Filter Farms</h3>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <label for="crop-type">Crop Type</label>
+                        <select id="crop-type">
+                            <option value="all">All Crops</option>
+                            <!-- Dynamic options will be inserted here -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="location">Location</label>
+                        <select id="location">
+                            <option value="all">All Locations</option>
+                            <!-- Dynamic options will be inserted here -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="risk-rating">Risk Rating</label>
+                        <select id="risk-rating">
+                            <option value="all">All Ratings</option>
+                            <!-- Dynamic options will be inserted here -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="investment-range">Investment Range</label>
+                        <select id="investment-range">
+                            <option value="all">Any Amount</option>
+                            <!-- Dynamic options will be inserted here -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="duration">Duration</label>
+                        <select id="duration">
+                            <option value="all">Any Duration</option>
+                            <!-- Dynamic options will be inserted here -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="apply-filters">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                    <button class="reset-filters">Reset Filters</button>
+                </div>
+            </div>
+            
+            <div class="farms-grid" id="farms-grid">
+                <!-- Dynamic farm cards will be inserted here -->
+            </div>
+        </section>
+        
+        <!-- Investment Summary Page -->
+        <section id="invest" class="page">
+            <div class="page-header">
+                <h2>Investment Summary</h2>
+                <div>Complete your investment</div>
+            </div>
+            
+            <div class="summary-container">
+                <div class="investment-breakdown" id="investment-breakdown">
+                    <!-- Dynamic investment breakdown will be inserted here -->
+                </div>
+                
+                <div class="token-conversion">
+                    <h3 style="margin-bottom: 1rem;">Token Conversion</h3>
+                    <p>Your investment will be converted to AgriVerse tokens</p>
+                    
+                    <div class="conversion-rate">
+                        1 ₹ = 1 Token
+                    </div>
+                    
+                    <div class="conversion-form">
+                        <div class="form-group">
+                            <label for="investment-amount">Investment Amount (₹)</label>
+                            <input type="number" id="investment-amount" min="0" step="1000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Tokens Allocated</label>
+                            <div id="tokens-allocated" style="padding: 0.75rem; background-color: #f5f5f5; border-radius: 6px; font-weight: bold;">
+                                0 Tokens
+                            </div>
+                        </div>
+                        
+                        <button class="confirm-button" id="confirm-investment">
+                            <i class="fas fa-check-circle"></i> Confirm Investment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Live Tracking Page -->
+        <section id="tracking" class="page">
+            <div class="page-header">
+                <h2>Live Farm Tracking</h2>
+                <div>Monitor your investment in real-time</div>
+            </div>
+            
+            <div class="tracking-container">
+                <div class="farm-updates" id="farm-updates">
+                    <!-- Dynamic farm updates will be inserted here -->
+                </div>
+                
+                <div class="farm-stats" id="farm-stats">
+                    <!-- Dynamic farm stats will be inserted here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Returns Page -->
+        <section id="returns" class="page">
+            <div class="page-header">
+                <h2>Returns & Settlement</h2>
+                <div>Track your investment returns</div>
+            </div>
+            
+            <div class="returns-container" id="returns-container">
+                <!-- Dynamic return cards will be inserted here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div class="modal" id="investment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Confirm Investment</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="investment-details">
+                <!-- Investment details will be inserted here -->
+            </div>
+            <div style="margin-top: 1.5rem; display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="confirm-button" id="final-confirm">Confirm</button>
+                <button class="reset-filters" id="cancel-investment">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Operation completed successfully!</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const investButtons = document.querySelectorAll('.invest-button');
+        const confirmInvestmentBtn = document.getElementById('confirm-investment');
+        const finalConfirmBtn = document.getElementById('final-confirm');
+        const cancelInvestmentBtn = document.getElementById('cancel-investment');
+        const investmentModal = document.getElementById('investment-modal');
+        const investmentDetails = document.getElementById('investment-details');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        const investmentAmountInput = document.getElementById('investment-amount');
+
+        // Initialize the application
+        function init() {
+            // Set up navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', handleNavigation);
+            });
+
+            // Set up invest buttons
+            investButtons.forEach(button => {
+                button.addEventListener('click', handleInvestClick);
+            });
+
+            // Set up investment confirmation
+            confirmInvestmentBtn.addEventListener('click', () => {
+                const amount = parseInt(investmentAmountInput.value);
+                
+                investmentDetails.innerHTML = `
+                    <p>You are about to invest:</p>
+                    <p>Investment Amount: <span style="color: var(--primary); font-weight: bold;">₹${amount.toLocaleString()}</span></p>
+                    <p>Tokens Allocated: <span style="font-weight: bold;">${amount.toLocaleString()} Tokens</span></p>
+                `;
+                
+                investmentModal.classList.add('active');
+            });
+
+            // Set up final confirmation
+            finalConfirmBtn.addEventListener('click', handleFinalConfirmation);
+            cancelInvestmentBtn.addEventListener('click', () => investmentModal.classList.remove('active'));
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === investmentModal) investmentModal.classList.remove('active');
+            });
+
+            // Update token allocation when investment amount changes
+            investmentAmountInput.addEventListener('input', updateTokenAllocation);
+        }
+
+        // Navigation handler
+        function handleNavigation(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links and pages
+            navLinks.forEach(link => link.classList.remove('active'));
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Show corresponding page
+            const pageId = this.getAttribute('data-page');
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Invest button click handler
+        function handleInvestClick() {
+            const farmName = this.getAttribute('data-farm');
+            
+            // Navigate to investment page
+            navLinks.forEach(link => link.classList.remove('active'));
+            pages.forEach(page => page.classList.remove('active'));
+            
+            document.querySelector(`[data-page="invest"]`).classList.add('active');
+            document.getElementById('invest').classList.add('active');
+            
+            // Update investment amount
+            investmentAmountInput.value = 0;
+            updateTokenAllocation();
+        }
+
+        // Update token allocation display
+        function updateTokenAllocation() {
+            const amount = parseInt(investmentAmountInput.value) || 0;
+            const tokenDisplay = document.getElementById('tokens-allocated');
+            if (tokenDisplay) {
+                tokenDisplay.textContent = `${amount.toLocaleString()} Tokens`;
+            }
+        }
+
+        // Final confirmation handler
+        function handleFinalConfirmation() {
+            const amount = parseInt(investmentAmountInput.value);
+            
+            // In a real app, this would process the payment
+            showToast(`Successfully invested ₹${amount.toLocaleString()}!`);
+            
+            // Close modal
+            investmentModal.classList.remove('active');
+            
+            // Navigate to tracking page
+            navLinks.forEach(link => link.classList.remove('active'));
+            pages.forEach(page => page.classList.remove('active'));
+            
+            document.querySelector(`[data-page="tracking"]`).classList.add('active');
+            document.getElementById('tracking').classList.add('active');
+        }
+
+        // Show toast notification
+        function showToast(message, isError = false) {
+            toastMessage.textContent = message;
+            
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+            
+            toast.classList.add('active');
+            
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

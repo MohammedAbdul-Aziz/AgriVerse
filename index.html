@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriVerse - Connecting Urban Investors to Real Indian Farms</title>
+
+    <!-- icons & fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- external stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <!-- 🌍 GOOGLE TRANSLATE WIDGET -->
+    <div id="google_translate_element" style="margin: 10px;"></div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                {
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,hi,te,ur,ar,fr,es,de,zh,ja,ko,ta,bn,pa,ml,gu,kn',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                },
+                'google_translate_element'
+            );
+        }
+    </script>
+
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- Background video -->
+    <video id="bgVideo" autoplay muted loop playsinline preload="auto" poster="video-poster.jpg" aria-hidden="true">
+        <source src="/Generating_a_Green_Field_Video.mp4" type="video/mp4">
+        <!-- optional WebM fallback:
+  <source src="Generating_a_Green_Field_Video.webm" type="video/webm">
+  -->
+        Your browser does not support HTML5 video.
+    </video>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="mainNav">
+        <div class="navbar-container">
+            <!-- <a class="navbar-brand" href="#page-top">
+                <i class="fas fa-leaf"></i> AgriVerse
+            </a> -->
+            <a class="navbar-brand" href="#page-top">
+                <img src="/WhatsApp Image 2025-11-07 at 01.54.15.jpeg" alt="AgriVerse Logo" class="logo-img">
+            </a>
+
+            <ul class="navbar-nav">
+                <li><a class="nav-link" href="#about">About</a></li>
+                <li><a class="nav-link" href="#how-it-works">How It Works</a></li>
+                <li><a class="nav-link" href="#perspectives">Perspectives</a></li>
+                <li><a class="nav-link" href="#contact">Contact</a></li>
+                <li><a class="nav-btn" href="/login-page.html">Login / Sign Up</a></li>
+            </ul>
+            <button class="mobile-menu-btn" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Masthead -->
+    <header class="masthead" id="page-top">
+        <div class="container">
+            <h1 class="masthead-heading">Connecting Urban Investors to Real Indian Farms</h1>
+            <p class="masthead-subheading">Bridging the gap between capital and cultivation through technology and
+                transparency</p>
+            <div class="btn-group">
+                <a href="#perspectives" class="btn btn-primary">Get Started</a>
+                <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="section-heading">
+            <h2>About AgriVerse</h2>
+            <p>Transforming agricultural investment through technology and transparency</p>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Revolutionizing Farm Investment</h3>
+                <p>AgriVerse is a virtual investment platform that connects urban investors with rural farmers across
+                    India. We're bridging the gap between capital and cultivation through a secure, transparent, and
+                    gamified experience.</p>
+                <p>With over 120 million farmers and a $24B+ agri-tech market by 2026, India's agricultural sector
+                    presents tremendous opportunities for impact investing.</p>
+                <p>Our platform enables investors to participate in real farm projects with as little as ₹500, while
+                    providing farmers with access to much-needed capital and modern farming tools.</p>
+            </div>
+            <!-- <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1625246333193-4e78d4cdc022?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Farm field">
+            </div> -->
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-heading">
+            <h2>How AgriVerse Works</h2>
+            <p>A simple, secure process for investors and farmers</p>
+        </div>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Browse Farms</h3>
+                <p>Explore verified farms and projects across India. Filter by crop type, location, or investment
+                    duration.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <h3>Invest Securely</h3>
+                <p>Choose your investment amount and complete payment through secure UPI integration with as little as
+                    ₹500.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <h3>Digital Contract</h3>
+                <p>Sign a legally binding contract with Aadhaar eSign technology for complete peace of mind.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Track & Grow</h3>
+                <p>Receive regular updates on your farm's progress and earn returns after harvest season.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perspectives Section -->
+    <section class="perspectives" id="perspectives">
+        <div class="section-heading">
+            <h2>Dual Perspectives</h2>
+            <p>AgriVerse creates value for Investors, Farmers and Retailers</p>
+        </div>
+        <div class="perspective-cards">
+            <div class="perspective-card" onclick="window.location.href='/public/investor-signup.html'">
+                <div class="perspective-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h3>For Investors</h3>
+                <p>Access ethical investment opportunities in agriculture with transparent returns and social impact.
+                </p>
+                <ul style="text-align: left; margin-left: 1.5rem;">
+                    <li>Low-risk passive income streams</li>
+                    <li>Diversify your investment portfolio</li>
+                    <li>Support sustainable farming practices</li>
+                    <li>Transparent tracking of your investments</li>
+                </ul>
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn btn-investor" onclick="window.location.href='/public/investor-signup.html'">Join
+                        as Investor</button>
+                </div>
+            </div>
+
+            <div class="perspective-card" onclick="window.location.href='/public/farmer-signup.html'">
+                <div class="perspective-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3>For Farmers</h3>
+                <p>Gain access to capital, technology, and markets to grow your agricultural business.</p>
+                <ul style="text-align: left; margin-left: 1.5rem;">
+                    <li>Affordable capital without debt burden</li>
+                    <li>Access to modern farming technology</li>
+                    <li>Fair profit sharing model</li>
+                    <li>Community and networking opportunities</li>
+                </ul>
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn btn-farmer" onclick="window.location.href='/public/farmer-signup.html'">Join as
+                        Farmer</button>
+                </div>
+            </div>
+
+            <!-- Retailer card (provided) -->
+            <div id="retailer" class="perspective-card" onclick="window.location.href='/public/supplier-signup.html'"
+                style="width: 400px;">
+                <div class="perspective-icon">
+                    <i class="fas fa-store"></i>
+                </div>
+                <h3>For Suppliers</h3>
+                <p>Secure a verified market and streamline sales by supplying inputs directly to funded farmers.</p>
+                <ul style="text-align: left; margin-left: 1.5rem;">
+                    <li>Access an exclusive network of pre-funded farmers</li>
+                    <li>Guaranteed token-based sales (no risk of non-payment)</li>
+                    <li>Minimize marketing and distribution costs</li>
+                    <li>Manage inventory based on real-time farmer demand data</li>
+                </ul>
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn btn-retailer" onclick="window.location.href='/public/supplier-signup.html'">Join
+                        as Supplier</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section (centered) -->
+    <section class="contact" id="contact" aria-label="Contact section">
+        <div class="section-heading">
+            <h2>Contact Support</h2>
+            <p>Have a problem or question? Tell us — we’ll get back within 48 hours.</p>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-form-card" role="form" aria-labelledby="contact-heading">
+                <form id="contactForm" novalidate>
+                    <div class="form-group">
+                        <label for="contactName">Full Name</label>
+                        <input type="text" id="contactName" name="name" placeholder="Your full name" required>
+                        <small class="error" id="errorName" aria-live="polite"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactEmail">Email Address</label>
+                        <input type="email" id="contactEmail" name="email" placeholder="name@example.com" required>
+                        <small class="error" id="errorEmail" aria-live="polite"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactMessage">Describe your problem</label>
+                        <textarea id="contactMessage" name="message" rows="5" placeholder="Tell us what's happening..."
+                            required></textarea>
+                        <small class="error" id="errorMessage" aria-live="polite"></small>
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="submit" class="btn btn-primary" id="contactSubmit">Send Message</button>
+                    </div>
+                </form>
+                <div id="contactSuccess" class="contact-success" role="status" aria-live="polite" hidden>
+                    <i class="fas fa-check-circle"></i> Thanks — your message was received. We'll reply within 48 hours.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3><i class="fas fa-leaf"></i> AgriVerse</h3>
+                <p>Connecting urban investors to real Indian farms, bridging the gap between capital and cultivation.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#perspectives">Perspectives</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Investment Agreement</a></li>
+                    <li><a href="#">KYC Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contact@agriverse.com</li>
+                    <li><i class="fas fa-phone"></i> +91 9876543210</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Hyderabad, India</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 AgriVerse. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
+            <h2 class="modal-title">Login to AgriVerse</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                <div class="form-footer">
+                    <p>Don't have an account? <a href="#"
+                            onclick="openModal('signupModal'); closeModal('loginModal')">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('signupModal')">&times;</button>
+            <h2 class="modal-title">Create an Account</h2>
+
+            <div class="user-type">
+                <div class="user-type-btn active" id="investorType" onclick="setUserType('investor')">Investor</div>
+                <div class="user-type-btn" id="farmerType" onclick="setUserType('farmer')">Farmer</div>
+                <div class="user-type-btn" id="retailerType" onclick="setUserType('retailer')">Retailer</div>
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
+                </div>
+
+                <!-- optional retailer-only fields could be added here and toggled via JS -->
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                <div class="form-footer">
+                    <p>Already have an account? <a href="#"
+                            onclick="openModal('loginModal'); closeModal('signupModal')">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('mainNav');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Modal functionality
+        function openModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (!el) return;
+            el.style.display = 'flex';
+            el.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (!el) return;
+            el.style.display = 'none';
+            el.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function (event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                event.target.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Set user type for signup
+        function setUserType(type) {
+            const investorBtn = document.getElementById('investorType');
+            const farmerBtn = document.getElementById('farmerType');
+            const retailerBtn = document.getElementById('retailerType');
+
+            investorBtn.classList.toggle('active', type === 'investor');
+            farmerBtn.classList.toggle('active', type === 'farmer');
+            retailerBtn.classList.toggle('active', type === 'retailer');
+
+            // Store the selected user type in a global variable
+            window.userType = type;
+        }
+
+        // Form submission handling (login)
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (email && password) {
+                alert('Login successful! Welcome back to AgriVerse.');
+                closeModal('loginModal');
+                this.reset();
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+
+        // Signup
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+
+            if (name && email && phone && password) {
+                const userType = window.userType || 'investor';
+                alert(`Account created successfully! Welcome to AgriVerse as a ${userType}.`);
+                closeModal('signupModal');
+                this.reset();
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+
+        // Contact form validation & submission
+        const contactForm = document.getElementById('contactForm');
+        contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            document.getElementById('errorName').textContent = '';
+            document.getElementById('errorEmail').textContent = '';
+            document.getElementById('errorMessage').textContent = '';
+
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+
+            let hasError = false;
+
+            if (name.length < 2) {
+                document.getElementById('errorName').textContent = 'Please enter your full name.';
+                hasError = true;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('errorEmail').textContent = 'Please enter a valid email address.';
+                hasError = true;
+            }
+
+            if (message.length < 10) {
+                document.getElementById('errorMessage').textContent = 'Please describe your issue (at least 10 characters).';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            const payload = { name, email, message, submittedAt: new Date().toISOString() };
+            console.log('Contact submission:', payload);
+
+            document.getElementById('contactSuccess').hidden = false;
+            contactForm.reset();
+
+            setTimeout(() => {
+                document.getElementById('contactSuccess').hidden = true;
+            }, 4000);
+        });
+
+        // Initialize with investor as default
+        setUserType('investor');
+    </script>
+
+    <!-- Floating Chatbot Button -->
+    <!-- <div class="chatbot-btn"><a href="https://www.chatbase.co/ZPIsyS1ou-2gEtyZCqU3e/help">💬</a></div> -->
+        <!-- <div class="chatbot-btn"><a href="https://www.chatbase.co/ZPIsyS1ou-2gEtyZCqU3e/help">💬</a></div> -->
+
+
+
+
+         <!-- <div class="chatbot-btn">
+    <a href="https://www.chatbase.co/ZPIsyS1ou-2gEtyZCqU3e/help" target="_blank">💬</a>
+</div> -->
+
+
+
+    <!-- <script
+    chatbot_id="6922139bc02adeb75cd7a79d"
+    data-type="default"
+    src="https://www.chatbase.co/ZPIsyS1ou-2gEtyZCqU3e/help"
+></script> -->
+
+</body>
+
+</html>

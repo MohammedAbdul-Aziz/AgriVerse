@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start New Crop Season – AgriVerse</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* RESET + GLOBAL */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter', 'Segoe UI', Arial;
+}
+body{
+    background:linear-gradient(180deg, #e9f7ec, #f7fffa);
+    min-height:100vh;
+}
+
+/* HEADER */
+.header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(46,125,50,0.95);
+    backdrop-filter:blur(12px);
+    padding:55px 20px 18px;
+    border-bottom-left-radius:25px;
+    border-bottom-right-radius:25px;
+    color:white;
+    text-align:center;
+    box-shadow:0 4px 14px rgba(46,125,50,0.32);
+    position:relative;
+}
+.back-btn{
+    position:absolute;
+    top:16px;
+    left:14px;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.18);
+    backdrop-filter:blur(6px);
+    border:none;
+    color:white;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:0.25s;
+}
+.back-btn:hover{
+    background:rgba(255,255,255,0.28);
+}
+.header h1{
+    font-size:21px;
+    font-weight:600;
+}
+
+/* CARD */
+.container{
+    max-width:480px;
+    margin:32px auto;
+    padding:0 22px;
+}
+.card{
+    background:white;
+    border-radius:26px;
+    overflow:hidden;
+    box-shadow:0 14px 35px rgba(0,0,0,0.12);
+    animation:fadeUp 0.5s ease;
+}
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(30px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+/* BANNER */
+.banner{
+    background:url('/WhatsApp Image 2025-11-07 at 01.54.15.jpeg') center/cover;
+    height:160px;
+    filter:brightness(0.92);
+}
+
+/* PROGRESS */
+.progress-wrap{
+    padding:22px;
+    background:#f3faf3;
+    border-bottom:1px solid #e5f4e5;
+}
+.progress-title{
+    text-align:center;
+    font-weight:600;
+    color:#2e7d32;
+    margin-bottom:10px;
+}
+.progress-bar{
+    width:100%;
+    height:10px;
+    border-radius:6px;
+    background:#e0f2e0;
+    overflow:hidden;
+}
+.progress-fill{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg, #2e7d32, #45a049);
+    transition:0.4s ease;
+}
+
+/* PANELS */
+.step-panel{
+    display:none;
+    padding:28px;
+    animation:slideIn 0.4s ease;
+}
+@keyframes slideIn{
+    from{opacity:0;transform:translateX(25px);}
+    to{opacity:1;transform:translateX(0);}
+}
+.step-panel.active{
+    display:block;
+}
+
+/* INPUTS */
+.input-group{
+    position:relative;
+    margin-bottom:30px;
+}
+.input-group input,
+.input-group select,
+.input-group textarea{
+    width:100%;
+    padding:16px 14px;
+    border:1.8px solid #d9e8d9;
+    border-radius:14px;
+    font-size:16px;
+    background:white;
+    transition:0.25s;
+}
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus{
+    border-color:#2e7d32;
+    box-shadow:0 0 0 4px rgba(46,125,50,0.18);
+}
+.input-group label{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:15px;
+    color:#718f73;
+    pointer-events:none;
+    transition:0.25s;
+}
+.input-group input:not(:placeholder-shown) + label,
+.input-group input:focus + label,
+.input-group textarea:not(:placeholder-shown) + label,
+.input-group textarea:focus + label,
+.input-group select:focus + label{
+    top:6px;
+    font-size:11px;
+    padding:0 6px;
+    color:#2e7d32;
+    background:white;
+}
+
+/* BUTTONS */
+.btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(135deg, #2e7d32, #43a047);
+    color:white;
+    font-size:18px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 10px 22px rgba(46,125,50,0.35);
+    transition:0.28s;
+}
+.btn:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 28px rgba(46,125,50,0.45);
+}
+.back-step-btn{
+    background:#dfe8df;
+    color:#2e7d32;
+}
+
+/* CROP PREVIEW */
+.crop-preview{
+    margin-top:22px;
+    background:#f0fbf0;
+    border:1px solid #cfe8cf;
+    padding:22px;
+    border-radius:20px;
+    display:none;
+    text-align:center;
+    animation:fadeIn 0.3s ease;
+}
+.crop-preview img{
+    width:160px;
+    height:160px;
+    object-fit:cover;
+    border-radius:18px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.18);
+    margin-bottom:8px;
+}
+.crop-preview p{
+    font-size:16px;
+    font-weight:600;
+    color:#2e7d32;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <button class="back-btn" onclick="window.location.href='farmer.html'">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1>Start New Crop Season</h1>
+</div>
+<!-- 🌍 Google Translate Widget -->
+<div id="google_translate_element" style="margin: 10px 0;"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,te,ur,ar,fr,es,de,zh,ja,ko,ta,bn,pa,ml,gu,kn',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      },
+      'google_translate_element'
+    );
+  }
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<div class="container">
+<div class="card">
+
+    <div class="banner"></div>
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+        <div class="progress-title">Step <span id="stepNumber">1</span> of 3</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step-panel active" id="step1">
+        <h3 style="color:#2e7d32;margin-bottom:20px;">Choose Crop</h3>
+
+        <div class="input-group">
+            <select id="crop_type" required>
+                <option value="" disabled selected></option>
+                <option value="Paddy">Paddy</option>
+                <option value="Wheat">Wheat</option>
+                <option value="Maize">Maize</option>
+                <option value="Vegetables">Vegetables</option>
+                <option value="Sugarcane">Sugarcane</option>
+                <option value="Millets">Millets</option>
+            </select>
+            <label>Crop Type</label>
+        </div>
+
+        <div class="crop-preview" id="cropPreview">
+            <img id="cropPreviewImg" src="" alt="">
+            <p id="cropPreviewName"></p>
+        </div>
+
+        <button class="btn next-btn" onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-panel" id="step2">
+        <h3 style="color:#2e7d32;margin-bottom:20px;">Crop Details</h3>
+
+        <div class="input-group">
+            <input type="date" id="crop_start_date" required>
+            <label>Start Date</label>
+        </div>
+
+        <div class="input-group">
+            <input type="number" id="duration" placeholder=" " min="1" max="365" step="1">
+            <label>Crop Duration (days)</label>
+        </div>
+
+        <button class="btn next-btn" onclick="nextStep()">Next</button>
+        <button class="btn back-step-btn" onclick="prevStep()">Back</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-panel" id="step3">
+        <h3 style="color:#2e7d32;margin-bottom:20px;">Land & Notes</h3>
+
+        <div class="input-group">
+            <input type="number" id="land" placeholder=" " step="0.1" readonly>
+            <label>Land Area (acres)</label>
+        </div>
+
+        <div class="input-group">
+            <textarea id="notes" placeholder=" "></textarea>
+            <label>Notes</label>
+        </div>
+
+        <button class="btn" onclick="submitCycle()">Finish</button>
+        <button class="btn back-step-btn" onclick="prevStep()">Back</button>
+    </div>
+
+</div>
+</div>
+
+<script>
+
+/* Utility functions */
+function yyyyMmDd(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+}
+function startOfDay(d) {
+    const x = new Date(d);
+    x.setHours(0,0,0,0);
+    return x;
+}
+
+/* Set min date to tomorrow */
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+document.getElementById("crop_start_date").min = yyyyMmDd(tomorrow);
+
+/* Load farmer land area */
+fetch("../backend/farmer/get_farmer_land.php")
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "OK"){
+            document.getElementById("land").value = data.land_area;
+        }
+    });
+
+/* Crop Preview */
+const cropSelect = document.getElementById("crop_type");
+const previewBox = document.getElementById("cropPreview");
+const previewImg = document.getElementById("cropPreviewImg");
+const previewName = document.getElementById("cropPreviewName");
+
+const cropImages = {
+    "Paddy": "../assets/paddy.jpg",
+    "Wheat": "../assets/wheat.jpg",
+    "Maize": "../assets/maize.jpg",
+    "Vegetables": "../assets/vegetables.jpg",
+    "Sugarcane": "../assets/sugarcane.jpg",
+    "Millets": "../assets/millets.jpg"
+};
+
+cropSelect.addEventListener("change", () => {
+    const crop = cropSelect.value;
+    if(crop){
+        previewImg.src = cropImages[crop];
+        previewName.innerText = crop;
+        previewBox.style.display = "block";
+    }
+});
+
+/* Wizard Logic */
+let step = 1;
+
+function updateProgress(){
+    document.getElementById("stepNumber").innerText = step;
+    document.getElementById("progressFill").style.width =
+        (step / 3 * 100) + "%";
+}
+
+function nextStep(){
+    if(step === 1){
+        if(!cropSelect.value){
+            alert("Select a crop.");
+            return;
+        }
+    }
+
+    if(step === 2){
+        const startDateStr = document.getElementById("crop_start_date").value;
+        const durationStr  = document.getElementById("duration").value;
+
+        if(!startDateStr){
+            alert("Select start date.");
+            return;
+        }
+
+        if(!durationStr){
+            alert("Enter duration.");
+            return;
+        }
+
+        const today = startOfDay(new Date());
+        const startDate = startOfDay(new Date(startDateStr));
+        const duration = Number(durationStr);
+
+        if(startDate <= today){
+            alert("Start date must be after today.");
+            return;
+        }
+
+        if(!Number.isInteger(duration) || duration < 1 || duration > 365){
+            alert("Duration must be between 1 and 365 days.");
+            return;
+        }
+    }
+
+    document.getElementById("step" + step).classList.remove("active");
+    step++;
+    document.getElementById("step" + step).classList.add("active");
+    updateProgress();
+}
+
+function prevStep(){
+    document.getElementById("step" + step).classList.remove("active");
+    step--;
+    document.getElementById("step" + step).classList.add("active");
+    updateProgress();
+}
+
+/* Final Submit */
+function submitCycle(){
+    const cropType  = document.getElementById("crop_type").value;
+    const startDate = document.getElementById("crop_start_date").value;
+    const duration  = Number(document.getElementById("duration").value);
+    const land      = document.getElementById("land").value;
+    const notes     = document.getElementById("notes").value;
+
+    // Validations
+    const today = startOfDay(new Date());
+    const sDate = startOfDay(new Date(startDate));
+
+    if(!cropType){
+        alert("Select a crop.");
+        return;
+    }
+
+    if(!startDate || sDate <= today){
+        alert("Start date must be after today.");
+        return;
+    }
+
+    if(!Number.isInteger(duration) || duration < 1 || duration > 365){
+        alert("Duration must be between 1 and 365 days.");
+        return;
+    }
+
+    if(!land){
+        alert("Land area missing.");
+        return;
+    }
+
+    // Send to backend
+    const formData = new FormData();
+    formData.append("crop_type", cropType);
+    formData.append("crop_start_date", startDate);
+    formData.append("crop_duration_days", duration);
+    formData.append("land_area_acres", land);
+    formData.append("notes", notes);
+
+    fetch("../backend/farmer/save_crop_cycle.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "OK"){
+            alert("Crop season saved successfully!");
+
+            // Redirect to dashboard or crop history
+            window.location.href = "farmer.html";
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(err => {
+        alert("Server error.");
+        console.error(err);
+    });
+}
+
+</script>
+
+</body>
+</html>
