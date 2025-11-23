@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crop Recommender</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Roboto, Arial; background:#f6f8fa; margin:0; padding:24px;}
+    .card { max-width:720px; margin:20px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,0.06);}
+    .row { display:flex; gap:12px; flex-wrap:wrap; }
+    .field { flex:1 1 140px; display:flex; flex-direction:column; margin-bottom:10px; }
+    label { font-size:13px; margin-bottom:6px; color:#333; }
+    input[type="number"] { padding:8px 10px; border-radius:6px; border:1px solid #ddd; }
+    button { padding:10px 16px; border-radius:8px; border: none; background:#4DA1A9; color:white; cursor:pointer; font-weight:600; }
+    .result { margin-top:12px; padding:12px; background:#f0fff5; border:1px solid #d7f5e6; border-radius:8px; color:#0b6a3f; display:none; }
+    .error { margin-top:12px; padding:12px; background:#fff0f0; border:1px solid #ffd6d6; color:#8a1a1a; display:none; border-radius:8px; }
+    .small { font-size:13px; color:#666; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Crop Recommender</h2>
+    <p class="small">Enter soil & weather measurements and click <strong>Get Recommendation</strong>.</p>
+
+    <div class="row" id="inputs">
+      <div class="field"><label for="N">N</label><input id="N" type="number" step="any" /></div>
+      <div class="field"><label for="P">P</label><input id="P" type="number" step="any" /></div>
+      <div class="field"><label for="K">K</label><input id="K" type="number" step="any" /></div>
+      <div class="field"><label for="temperature">Temperature (°C)</label><input id="temperature" type="number" step="any" /></div>
+      <div class="field"><label for="humidity">Humidity (%)</label><input id="humidity" type="number" step="any" /></div>
+      <div class="field"><label for="ph">pH</label><input id="ph" type="number" step="any" /></div>
+      <div class="field"><label for="rainfall">Rainfall (mm)</label><input id="rainfall" type="number" step="any" /></div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <button id="predictBtn">Get Recommendation</button>
+      <button id="clearBtn" style="margin-left:8px;background:#e0e0e0;color:#222;">Clear</button>
+    </div>
+
+    <div id="result" class="result"></div>
+    <div id="error" class="error"></div>
+  </div>
+
+  <script src="/static/main.js"></script>
+</body>
+</html>
