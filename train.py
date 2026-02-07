@@ -1,34 +1,29 @@
-
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications import MobileNetV2
 from sklearn.model_selection import train_test_split
 import os
 
 # --- Configuration ---
 IMAGE_DIR = 'plant-pathology-2020-fgvc7/images'
 TRAIN_CSV = 'plant-pathology-2020-fgvc7/train.csv'
-IMG_HEIGHT = 128
-IMG_WIDTH = 128
+IMG_HEIGHT = 224  # Using a larger image size for transfer learning
+IMG_WIDTH = 224
 BATCH_SIZE = 32
-EPOCHS = 5 # In a real scenario, you'd use more epochs
+EPOCHS = 50       # Let's start with 10 epochs for this new model
 
 # --- Load and Prepare Data ---
 print("Loading and preparing data...")
 train_df = pd.read_csv(TRAIN_CSV)
 train_df['image_id'] = train_df['image_id'] + '.jpg'
-
-# Identify the label columns
 label_cols = ['healthy', 'multiple_diseases', 'rust', 'scab']
-
-# Split data into training and validation sets
 train_df, valid_df = train_test_split(train_df, test_size=0.2, random_state=42)
 
-# --- Image Data Generators ---
-# This will rescale and augment the images
+# --- Image Data Generators with Augmentation ---
 train_datagen = ImageDataGenerator(
     rescale=1./255,
     rotation_range=40,
@@ -49,7 +44,7 @@ train_generator = train_datagen.flow_from_dataframe(
     y_col=label_cols,
     target_size=(IMG_HEIGHT, IMG_WIDTH),
     batch_size=BATCH_SIZE,
-    class_mode='raw' # Use 'raw' for multi-label classification
+    class_mode='raw'
 )
 
 validation_generator = validation_datagen.flow_from_dataframe(
@@ -62,20 +57,26 @@ validation_generator = validation_datagen.flow_from_dataframe(
     class_mode='raw'
 )
 
+# --- Build the Model with Transfer Learning ---
+print("Building the model using MobileNetV2...")
 
-# --- Build the Model ---
-print("Building the model...")
+# 1. Load the base model (pre-trained on ImageNet)
+#    - include_top=False means we don't include the final classification layer
+#    - weights='imagenet' downloads the pre-trained weights
+base_model = MobileNetV2(input_shape=(IMG_HEIGHT, IMG_WIDTH, 3),
+                         include_top=False,
+                         weights='imagenet')
+
+# 2. Freeze the base model
+#    - We don't want to re-train the expert layers, just use their learned features
+base_model.trainable = False
+
+# 3. Create our new model on top
 model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)),
-    MaxPooling2D(2, 2),
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D(2, 2),
-    Conv2D(128, (3, 3), activation='relu'),
-    MaxPooling2D(2, 2),
-    Flatten(),
-    Dense(512, activation='relu'),
-    Dropout(0.5),
-    Dense(4, activation='softmax') # 4 classes
+    base_model,
+    GlobalAveragePooling2D(), # Pools the features from the base model
+    Dense(128, activation='relu'),
+    Dense(4, activation='softmax') # Our final output layer for 4 classes
 ])
 
 model.compile(optimizer='adam',
@@ -85,17 +86,15 @@ model.compile(optimizer='adam',
 model.summary()
 
 # --- Train the Model ---
-print("Training the model...")
+print("Training the new model...")
 history = model.fit(
     train_generator,
-    steps_per_epoch=train_generator.n // BATCH_SIZE,
     epochs=EPOCHS,
-    validation_data=validation_generator,
-    validation_steps=validation_generator.n // BATCH_SIZE
+    validation_data=validation_generator
 )
 
 # --- Save the Model ---
 print("Saving the trained model to plant_disease_model.keras")
 model.save('plant_disease_model.keras')
 
-print("Training complete and model saved.")
+print("Training complete and new, more powerful model saved.")
