@@ -13,8 +13,8 @@ IMAGE_DIR = 'plant-pathology-2020-fgvc7/images'
 TRAIN_CSV = 'plant-pathology-2020-fgvc7/train.csv'
 IMG_HEIGHT = 224  # Using a larger image size for transfer learning
 IMG_WIDTH = 224
-BATCH_SIZE = 32
-EPOCHS = 50       # Let's start with 10 epochs for this new model
+BATCH_SIZE = 50
+EPOCHS = 20       # Let's start with 10 epochs for this new model
 
 # --- Load and Prepare Data ---
 print("Loading and preparing data...")
