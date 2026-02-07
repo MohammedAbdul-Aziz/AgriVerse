@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AgriVerse Yield Estimator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  /* Reset & base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e6f1e8, #c9e4c5);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 50px 15px 80px;
+    color: #2c5e1a;
+  }
+
+  .container {
+    background: #fff;
+    max-width: 520px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    padding: 36px 48px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  h2 {
+    font-weight: 700;
+    font-size: 2.4rem;
+    text-align: center;
+    margin: 0;
+    color: #2a7a2a;
+    letter-spacing: 1.2px;
+  }
+
+  h3 {
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin: 0 0 12px 0;
+    border-bottom: 2px solid #d0e6c9;
+    padding-bottom: 6px;
+    color: #3a6d1a;
+  }
+
+  form {
+    display: grid;
+    gap: 18px;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #4a6b2a;
+    display: block;
+    margin-bottom: 6px;
+    user-select: none;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 1rem;
+    border: 1.8px solid #c6d9b8;
+    border-radius: 10px;
+    background-color: #f9fdf8;
+    color: #2a4d14;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-weight: 500;
+  }
+  input[type="text"]::placeholder,
+  input[type="number"]::placeholder {
+    color: #9bbf7c;
+    font-weight: 400;
+  }
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+    background-color: #f0faee;
+  }
+
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #4caf50 50%),
+      linear-gradient(135deg, #4caf50 50%, transparent 50%),
+      radial-gradient(#4caf50 70%, transparent 72%);
+    background-position:
+      calc(100% - 20px) calc(1em + 2px),
+      calc(100% - 15px) calc(1em + 2px),
+      calc(100% - 2.5em) 0.6em;
+    background-size: 5px 5px, 5px 5px, 1.5em 1.5em;
+    background-repeat: no-repeat;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #4caf50, #2a7a2a);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(42,122,42,0.5);
+    transition: background-color 0.3s ease, transform 0.15s ease;
+    user-select: none;
+  }
+  button[type="submit"]:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2a7a2a, #4caf50);
+    transform: translateY(-2px);
+  }
+  button[type="submit"]:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  button[type="submit"]:disabled {
+    background-color: #a4c48c;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* Result output */
+  #result-output {
+    background-color: #e8f5e9;
+    border: 2px solid #c8e6c9;
+    border-radius: 12px;
+    color: #1b5e20;
+    padding: 22px 28px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    min-height: 90px;
+    box-shadow: inset 0 0 12px rgba(160,212,104,0.4);
+    user-select: text;
+    transition: background-color 0.4s ease;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .container {
+      padding: 28px 24px 36px 24px;
+      max-width: 100%;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+    button[type="submit"] {
+      font-size: 1.05rem;
+      padding: 14px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container" role="main" aria-label="Yield Estimator Form">
+  <h2>AgriVerse Yield Estimator</h2>
+
+  <form id="yield-form" novalidate aria-describedby="result-output">
+    <label for="farmer_id">Farmer ID</label>
+    <input type="text" id="farmer_id" name="farmer_id" placeholder="e.g., FARMER_101" autocomplete="off" required aria-required="true" />
+
+    <label for="location">Location</label>
+    <input type="text" id="location" name="location" placeholder="e.g., MEDAK" autocomplete="off" required aria-required="true" />
+
+    <label for="area">Area (in acres)</label>
+    <input type="number" id="area" name="area" placeholder="e.g., 5" min="0" step="any" required aria-required="true" />
+
+    <label for="crop">Crop</label>
+    <input type="text" id="crop" name="crop" placeholder="e.g., RICE" autocomplete="off" required aria-required="true" />
+
+    <label for="irrigation_type">Irrigation</label>
+    <select id="irrigation_type" name="irrigation_type" required aria-required="true" aria-label="Select irrigation type">
+      <option value="" disabled selected>Select irrigation type</option>
+      <option value="I">Irrigated</option>
+      <option value="R">Rainfed</option>
+    </select>
+
+    <button type="submit" disabled>Calculate</button>
+  </form>
+
+  <h3>Result:</h3>
+  <pre id="result-output" tabindex="0" aria-live="polite" aria-atomic="true">Please fill the form and click Calculate.</pre>
+</div>
+
+<script>
+  const form = document.getElementById('yield-form');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const resultOutput = document.getElementById('result-output');
+
+  // Enable submit only if all required fields are filled and valid
+  function validateForm() {
+    const formData = new FormData(form);
+    let valid = true;
+    for (const [key, value] of formData.entries()) {
+      if (!value || value.trim() === '') {
+        valid = false;
+        break;
+      }
+    }
+    // Also check select not default
+    if (form.irrigation_type.value === '') valid = false;
+
+    submitBtn.disabled = !valid;
+  }
+
+  form.addEventListener('input', validateForm);
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    // Disable button and show loading text
+    submitBtn.disabled = true;
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Calculating...';
+
+    resultOutput.textContent = 'Calculating...';
+
+    // Gather form data
+    const data = {
+      farmer_id: form.farmer_id.value.trim(),
+      location: form.location.value.trim(),
+      area: form.area.value.trim(),
+      crop: form.crop.value.trim(),
+      irrigation_type: form.irrigation_type.value
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        resultOutput.textContent = `
+Base Yield:     ${result.baseline_yield} t
+Adjusted Yield: ${result.adjusted_yield} t
+Yield Range:    ${result.yield_range_min} t - ${result.yield_range_max} t
+
+--- Factors Used ---
+Weather:       ${result.factors.weather}
+Irrigation:    ${result.factors.irrigation}
+Input Quality: ${result.factors.ipqual}
+Management:    ${result.factors.management}
+Pest/Disease:  ${result.factors.pestcon}
+        `.trim();
+      } else {
+        resultOutput.textContent = `Error: ${result.error}`;
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      resultOutput.textContent = 'Failed to connect to the server. Is it running?';
+    }
+
+    // Restore button text and re-validate form
+    submitBtn.textContent = originalText;
+    validateForm();
+  });
+
+  // Initial validation on page load
+  validateForm();
+</script>
+
+</body>
+</html>

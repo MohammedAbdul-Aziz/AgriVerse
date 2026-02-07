@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agriverse Investment Platform</title>
+<style>
+  /* (Keep all previous styles here unchanged for brevity) */
+  /* Add this style to highlight invalid inputs */
+  input:invalid {
+    border-color: #c62828 !important;
+    box-shadow: 0 0 8px #c62828 !important;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  /* Reset and base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #d0f0c0, #a0d468);
+    color: #2a4d14;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a, button {
+    font-family: inherit;
+  }
+
+  /* Navigation */
+  nav {
+    background: #2a7a2a;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 14px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  nav button {
+    background: transparent;
+    border: none;
+    color: #d0f0c0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 10px 22px;
+    border-radius: 12px;
+    transition: background-color 0.35s ease, color 0.35s ease, transform 0.2s ease;
+    outline-offset: 3px;
+  }
+  nav button:focus-visible {
+    outline: 3px solid #a0d468;
+    outline-offset: 3px;
+  }
+  nav button:hover:not(.active) {
+    background-color: #4caf50;
+    color: white;
+    transform: translateY(-2px);
+  }
+  nav button.active {
+    background: linear-gradient(135deg, #4caf50, #2a7a2a);
+    color: white;
+    box-shadow: 0 6px 15px rgba(42,122,42,0.6);
+    cursor: default;
+    transform: none;
+  }
+
+  /* Main content */
+  main {
+    flex-grow: 1;
+    max-width: 720px;
+    margin: 30px auto 50px auto;
+    width: 90%;
+  }
+  section.container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 14px 36px rgba(0,0,0,0.12);
+    padding: 40px 50px 50px 50px;
+    display: none;
+    flex-direction: column;
+    gap: 36px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  section.container.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Headings */
+  h1, h2, h3 {
+    margin: 0;
+    font-weight: 700;
+    color: #2a7a2a;
+    letter-spacing: 1.2px;
+    text-align: center;
+  }
+  h1 {
+    font-size: 2.6rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.4rem;
+    margin-top: 10px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #a0d468;
+    padding-bottom: 6px;
+  }
+
+  /* QR Section */
+  .qr-section {
+    text-align: center;
+  }
+  .qr-section p {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #3a5d1a;
+    margin-bottom: 20px;
+  }
+  .qr-section img {
+    width: 220px;
+    height: 220px;
+    border-radius: 24px;
+    box-shadow: 0 12px 30px rgba(58, 93, 26, 0.35);
+    transition: transform 0.35s ease;
+  }
+  .qr-section img:hover,
+  .qr-section img:focus {
+    transform: scale(1.07);
+  }
+
+  /* Forms */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  input[type="text"] {
+    padding: 16px 20px;
+    font-size: 1.15rem;
+    border-radius: 14px;
+    border: 2.5px solid #a0d468;
+    box-shadow: inset 0 3px 8px rgba(160,212,104,0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  input[type="text"]:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 12px #4caf50;
+    outline: none;
+  }
+  input::placeholder {
+    font-weight: 500;
+    color: #7b9a3a;
+  }
+
+  /* Buttons */
+  button {
+    background: linear-gradient(135deg, #4caf50, #2a7a2a);
+    color: white;
+    border: none;
+    padding: 18px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(42,122,42,0.45);
+    transition: background 0.4s ease, transform 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2a7a2a, #4caf50);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(42,122,42,0.7);
+  }
+  button:disabled {
+    background: #a0d468;
+    cursor: default;
+    box-shadow: none;
+    transform: none;
+  }
+  button:focus-visible {
+    outline: 3px solid #a0d468;
+    outline-offset: 3px;
+  }
+
+  /* Loading spinner inside button */
+  .btn-spinner {
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  button.loading .btn-spinner {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Status messages */
+  .status {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-height: 28px;
+    margin-top: -10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .status.visible {
+    opacity: 1;
+  }
+  .status.success {
+    color: #2e7d32;
+  }
+  .status.error {
+    color: #c62828;
+  }
+
+  /* Balances panel */
+  .balances {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #3a5d1a;
+    background: #e6f2d6;
+    padding: 22px 35px;
+    border-radius: 20px;
+    box-shadow: inset 0 0 18px rgba(58,93,26,0.25);
+    user-select: none;
+  }
+  .balances div {
+    min-width: 150px;
+    text-align: center;
+  }
+
+  /* Purchase section */
+  .purchase-section {
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  label {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #2a7a2a;
+  }
+  select {
+    padding: 14px 18px;
+    font-size: 1.1rem;
+    border-radius: 14px;
+    border: 2.5px solid #a0d468;
+    box-shadow: inset 0 3px 8px rgba(160,212,104,0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  select:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 12px #4caf50;
+    outline: none;
+  }
+
+  /* Ledger */
+  .ledger {
+    max-height: 280px;
+    overflow-y: auto;
+    background: #f0f9e8;
+    border: 2.5px solid #a0d468;
+    padding: 20px 28px;
+    border-radius: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    color: #2a5a1a;
+    box-shadow: inset 0 0 15px rgba(160,212,104,0.35);
+    scrollbar-width: thin;
+    scrollbar-color: #a0d468 transparent;
+  }
+  .ledger::-webkit-scrollbar {
+    width: 8px;
+  }
+  .ledger::-webkit-scrollbar-thumb {
+    background-color: #a0d468;
+    border-radius: 20px;
+  }
+  .ledger p {
+    margin: 8px 0;
+    line-height: 1.4;
+  }
+
+  /* Responsive */
+  @media (max-width: 720px) {
+    main {
+      margin: 20px auto 40px auto;
+      width: 95%;
+      padding: 0 10px;
+    }
+    .balances {
+      flex-direction: column;
+      gap: 20px;
+      font-size: 1.3rem;
+      padding: 18px 25px;
+    }
+    form, .purchase-section {
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 400px) {
+    nav {
+      gap: 12px;
+      padding: 10px 5px;
+    }
+    nav button {
+      font-size: 1rem;
+      padding: 8px 14px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav aria-label="Primary navigation">
+  <button id="navInvestor" class="active" aria-controls="investorPage" aria-selected="true" role="tab" tabindex="0">Investor</button>
+  <button id="navFarmer" aria-controls="farmerPage" aria-selected="false" role="tab" tabindex="-1">Farmer Dashboard</button>
+  <button id="navSupplier" aria-controls="supplierPage" aria-selected="false" role="tab" tabindex="-1">Supplier Dashboard</button>
+</nav>
+
+<main>
+  <!-- Investor Page -->
+  <section id="investorPage" class="container active" role="tabpanel" tabindex="0" aria-labelledby="navInvestor" aria-hidden="false">
+    <h1>Agriverse Investment Portal</h1>
+    <div class="qr-section">
+      <p>Scan the QR code below to invest <strong>₹200</strong> into a farm</p>
+      <img src="WhatsApp Image 2025-11-08 at 18.34.53_05326211.jpg" alt="Bank Account QR Code" tabindex="0" />
+    </div>
+    <form id="investmentForm" autocomplete="off" spellcheck="false" novalidate>
+      <input type="text" id="investorName" placeholder="Enter your Name" required aria-label="Investor Name" />
+      <input type="text" id="transactionID" placeholder="Enter Transaction ID" required aria-label="Transaction ID" />
+      <button type="submit" aria-live="polite" disabled>
+        Submit Investment
+        <span class="btn-spinner" aria-hidden="true"></span>
+      </button>
+    </form>
+    <div class="status" id="investmentStatus" role="alert" aria-live="polite"></div>
+  </section>
+
+  <!-- Farmer Dashboard -->
+  <section id="farmerPage" class="container" role="tabpanel" tabindex="0" aria-labelledby="navFarmer" aria-hidden="true">
+    <h2>Farmer Dashboard</h2>
+    <div class="balances" aria-label="Token balances">
+      <div>Farmer Tokens: <span id="farmerTokens">0</span></div>
+      <div>Supplier Tokens: <span id="supplierTokens">0</span></div>
+    </div>
+    <div class="purchase-section" aria-label="Purchase goods from supplier">
+      <label for="goodsSelect">Buy goods from supplier:</label>
+      <select id="goodsSelect" aria-label="Select goods to buy">
+        <option value="50">Fertilizer - 50 tokens</option>
+        <option value="100">Seeds - 100 tokens</option>
+        <option value="150">Tools - 150 tokens</option>
+      </select>
+      <button id="buyGoodsBtn" aria-live="polite">Buy</button>
+    </div>
+    <div class="status" id="purchaseStatus" role="alert" aria-live="polite"></div>
+
+    <h3>Transaction Ledger</h3>
+    <div class="ledger" id="ledgerLogFarmer" tabindex="0" aria-label="Transaction ledger log">
+      <!-- Ledger entries appear here -->
+    </div>
+  </section>
+
+  <!-- Supplier Dashboard -->
+  <section id="supplierPage" class="container" role="tabpanel" tabindex="0" aria-labelledby="navSupplier" aria-hidden="true">
+    <h2>Supplier Dashboard</h2>
+    <div class="balances" aria-label="Token balances">
+      <div>Supplier Tokens: <span id="supplierTokensSupplier">0</span></div>
+    </div>
+
+    <h3>Transaction Ledger</h3>
+    <div class="ledger" id="ledgerLogSupplier" tabindex="0" aria-label="Transaction ledger log">
+      <!-- Ledger entries appear here -->
+    </div>
+  </section>
+</main>
+
+<script>
+  // Token balances
+  let farmerTokens = 0;
+  let supplierTokens = 0;
+  const fixedInvestmentAmount = 200;
+
+  // Ledger data
+  const ledger = [];
+
+  // Navigation elements
+  const navButtons = {
+    investor: document.getElementById('navInvestor'),
+    farmer: document.getElementById('navFarmer'),
+    supplier: document.getElementById('navSupplier')
+  };
+  const pages = {
+    investor: document.getElementById('investorPage'),
+    farmer: document.getElementById('farmerPage'),
+    supplier: document.getElementById('supplierPage')
+  };
+
+  // Investor form elements
+  const investmentForm = document.getElementById('investmentForm');
+  const investmentStatus = document.getElementById('investmentStatus');
+  const investmentButton = investmentForm.querySelector('button');
+  const investorNameInput = document.getElementById('investorName');
+  const transactionIDInput = document.getElementById('transactionID');
+  const investmentSpinner = investmentButton.querySelector('.btn-spinner');
+
+  // Farmer elements
+  const farmerTokensSpan = document.getElementById('farmerTokens');
+  const supplierTokensSpan = document.getElementById('supplierTokens');
+  const goodsSelect = document.getElementById('goodsSelect');
+  const buyGoodsBtn = document.getElementById('buyGoodsBtn');
+  const purchaseStatus = document.getElementById('purchaseStatus');
+  const ledgerLogFarmer = document.getElementById('ledgerLogFarmer');
+
+  // Supplier elements
+  const supplierTokensSupplierSpan = document.getElementById('supplierTokensSupplier');
+  const ledgerLogSupplier = document.getElementById('ledgerLogSupplier');
+
+  // Switch page with focus and ARIA updates
+  function switchPage(page) {
+    Object.keys(pages).forEach(key => {
+      if (key === page) {
+        pages[key].classList.add('active');
+        pages[key].setAttribute('aria-hidden', 'false');
+        navButtons[key].classList.add('active');
+        navButtons[key].setAttribute('aria-selected', 'true');
+        navButtons[key].setAttribute('tabindex', '0');
+        pages[key].focus();
+      } else {
+        pages[key].classList.remove('active');
+        pages[key].setAttribute('aria-hidden', 'true');
+        navButtons[key].classList.remove('active');
+        navButtons[key].setAttribute('aria-selected', 'false');
+        navButtons[key].setAttribute('tabindex', '-1');
+      }
+    });
+    clearStatusMessages();
+  }
+
+  // Clear all status messages on page switch or form reset
+  function clearStatusMessages() {
+    investmentStatus.textContent = '';
+    investmentStatus.className = 'status';
+    purchaseStatus.textContent = '';
+    purchaseStatus.className = 'status';
+  }
+
+  // Update token balances on all dashboards
+  function updateBalances() {
+    farmerTokensSpan.textContent = farmerTokens;
+    supplierTokensSpan.textContent = supplierTokens;
+    supplierTokensSupplierSpan.textContent = supplierTokens;
+  }
+
+  // Add ledger entry and update both ledger logs
+  function addLedgerEntry(entry) {
+    ledger.push(entry);
+    const time = new Date().toLocaleTimeString();
+    const entryText = `[${time}] ${entry.description}`;
+
+    const pFarmer = document.createElement('p');
+    pFarmer.textContent = entryText;
+    ledgerLogFarmer.prepend(pFarmer);
+
+    const pSupplier = document.createElement('p');
+    pSupplier.textContent = entryText;
+    ledgerLogSupplier.prepend(pSupplier);
+  }
+
+  // Show status message helper
+  function showStatus(element, message, type = 'success') {
+    element.textContent = message;
+    element.className = `status visible ${type}`;
+  }
+
+  // Enable/disable submit button based on input validation
+  function validateInvestorForm() {
+    const isNameValid = investorNameInput.value.trim().length > 0;
+    const isTxnValid = transactionIDInput.value.trim().length > 0;
+    investmentButton.disabled = !(isNameValid && isTxnValid);
+  }
+
+  // Add event listeners to inputs for validation
+  investorNameInput.addEventListener('input', validateInvestorForm);
+  transactionIDInput.addEventListener('input', validateInvestorForm);
+
+  // Investor form submit handler with validation
+  investmentForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Extra check before submit
+    if (investmentButton.disabled) {
+      showStatus(investmentStatus, 'Please fill in all required fields.', 'error');
+      return;
+    }
+
+    const name = investorNameInput.value.trim();
+    const txnId = transactionIDInput.value.trim();
+
+    showStatus(investmentStatus, 'Processing your investment...', 'success');
+    investmentButton.disabled = true;
+    investmentButton.classList.add('loading');
+
+    setTimeout(() => {
+      farmerTokens += fixedInvestmentAmount;
+      updateBalances();
+
+      addLedgerEntry({
+        description: `Investor "${name}" invested ₹${fixedInvestmentAmount} (Txn ID: ${txnId}). Added ${fixedInvestmentAmount} tokens to Farmer account.`
+      });
+
+      showStatus(investmentStatus, 'Investment successful! Tokens added to Farmer account.', 'success');
+      investmentButton.classList.remove('loading');
+      investmentForm.reset();
+      validateInvestorForm();
+    }, 1400);
+  });
+
+  // Farmer buy goods handler
+  buyGoodsBtn.addEventListener('click', () => {
+    purchaseStatus.textContent = '';
+    const cost = parseInt(goodsSelect.value);
+    if (cost > farmerTokens) {
+      showStatus(purchaseStatus, 'Insufficient tokens to buy this item.', 'error');
+      return;
+    }
+    farmerTokens -= cost;
+    supplierTokens += cost;
+    updateBalances();
+
+    addLedgerEntry({
+      description: `Farmer purchased goods worth ${cost} tokens from Supplier. Tokens deducted from Farmer and added to Supplier.`
+    });
+
+    showStatus(purchaseStatus, `Purchase successful! ${cost} tokens transferred.`, 'success');
+  });
+
+  // Navigation button event listeners
+  navButtons.investor.addEventListener('click', () => switchPage('investor'));
+  navButtons.farmer.addEventListener('click', () => switchPage('farmer'));
+  navButtons.supplier.addEventListener('click', () => switchPage('supplier'));
+
+  // Initialize balances and show investor page by default
+  updateBalances();
+  switchPage('investor');
+  validateInvestorForm();
+</script>
+
+</body>
+</html>
