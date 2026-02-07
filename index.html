@@ -12,25 +12,41 @@
     </header>
     <main>
         <div class="container">
-            <div class="upload-section">
-                <h2>Upload Crop Image</h2>
+            <!-- Upload Section -->
+            <div class="card" id="upload-card">
                 <form id="upload-form">
+                    <h2>Upload Crop Image for Analysis</h2>
+                    <label for="image-input" id="image-input-label">
+                        <p>Drag & Drop your image here</p>
+                        <span>or click to browse</span>
+                        <div id="file-name" style="margin-top: 1rem; font-weight: 500;"></div>
+                    </label>
                     <input type="file" id="image-input" accept="image/*" required>
-                    <button type="submit">Analyze</button>
+                    <button type="submit" id="analyze-button">Analyze</button>
                 </form>
             </div>
-            <div id="result-section" class="hidden">
+
+            <!-- Results Section -->
+            <div id="result-section" class="card hidden">
                 <div class="image-display">
-                    <h3>Uploaded Image</h3>
                     <img id="uploaded-image" src="" alt="Uploaded Crop Image">
                 </div>
-                <div class="prediction-display">
-                    <h3>Prediction</h3>
-                    <div id="prediction-output"></div>
+                <div class="results-display">
+                    <h3>Disease Prediction</h3>
+                    <div id="prediction-output">
+                        <!-- Spinner will be injected here -->
+                    </div>
+                    <h3>Nutrient Status</h3>
+                    <div id="nutrient-status-output">
+                         <!-- Spinner will be injected here -->
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+    <footer>
+        <p>&copy; 2026 AgriVerse. All Rights Reserved.</p>
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>
